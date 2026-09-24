@@ -61,7 +61,12 @@ class Ruleset:
             "band": (lower, last["m_max"]),
             "clause": mpe_data["clause"],
         }
-
+    def repeatability_count(self, max_capacity: float) -> int:
+        """Weighings per repeatability series for type approval (R76-1 A.4.10)."""
+        v, _ = self.rule("repeatability_weighings")
+        ta = v["type_approval"]
+        return ta["weighings_below"] if max_capacity < ta["max_below_g"] else ta["weighings_otherwise"]
+    
     def band_boundaries(self, accuracy_class: str) -> list:
         """Load points (in e) where the MPE changes. These are where scales most often flip."""
         bands = self.class_data(accuracy_class)["mpe"]["bands"]

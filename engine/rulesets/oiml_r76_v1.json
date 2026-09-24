@@ -164,7 +164,7 @@
         5
       ],
       "clause": "R76-1 4.2.2.1",
-      "verified": false
+      "verified": true
     },
     "in_service_multiplier": {
       "value": 2,
@@ -174,13 +174,14 @@
     "zero_setting_accuracy_e": {
       "value": 0.25,
       "clause": "R76-1 4.5.2 / A.4.2.3",
-      "verified": false
+      "verified": true
     },
     "tare_setting_accuracy_e": {
-      "value": 0.25,
-      "clause": "R76-1 4.6.3 / A.4.6.2",
-      "verified": false
-    },
+  "value": 0.25,
+  "clause": "R76-1 4.6.3 / A.4.6.2",
+  "note": "Applies to electronic instruments and analog indication. Mechanical instruments with digital indication use ±0.5d instead (not modelled in the prototype).",
+  "verified": true
+},
     "discrimination_extra_load_d": {
       "value": 1.4,
       "clause": "R76-1 3.8.2.2 / A.4.8",
@@ -194,18 +195,17 @@
     "weighing_test_min_loads": {
       "value": 10,
       "clause": "R76-1 A.4.4.1",
-      "verified": false
+      "verified": true
     },
     "repeatability_weighings": {
-      "value": {
-        "I": 6,
-        "II": 6,
-        "III": 3,
-        "IIII": 3
-      },
-      "clause": "R76-1 3.6.1 (requirement) / A.4.10 (number of weighings)",
-      "verified": false
-    },
+  "value": {
+    "type_approval": { "max_below_g": 1000000, "weighings_below": 10, "weighings_otherwise": 3 },
+    "verification": { "I": 6, "II": 6, "III": 3, "IIII": 3 }
+  },
+  "clause": "R76-1 3.6.1 / A.4.10",
+  "note": "Type approval: two series (~50% and ~100% of Max), 10 weighings each if Max < 1000 kg, otherwise at least 3. Verification: one series at ~0.8 Max.",
+  "verified": true
+},
     "eccentricity": {
       "value": {
         "fraction_up_to_4_supports": 0.3333333333,
@@ -237,16 +237,15 @@
       "verified": true
     },
     "temperature_test_sequence_c": {
-      "value": [
-        20,
-        "max",
-        "min",
-        5,
-        20
-      ],
-      "clause": "R76-1 A.5.3.1",
-      "verified": false
-    },
+  "value": {
+    "reference_c": 20,
+    "class_I_reference": "mean of specified limits",
+    "extra_5c_if_low_at_or_below_0": true
+  },
+  "clause": "R76-1 A.5.3.1",
+  "note": "Weighing tests at reference, high limit, low limit, 5 °C (only if low limit <= 0 °C), then reference. Max 1 °C/min change; at high temperature absolute humidity <= 20 g/m3.",
+  "verified": true
+},
     "rounding_elimination_threshold": {
       "value": 0.2,
       "clause": "R76-1 3.5.3.2",

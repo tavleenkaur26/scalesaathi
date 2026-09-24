@@ -65,10 +65,11 @@ def generate_test_plan(spec: InstrumentSpec, rs: Ruleset) -> dict:
         positions = ["Centre"] + [f"Over support {i}" for i in range(1, n_sup + 1)]
 
     # ---------- repeatability ----------
-    counts, rep_clause = rs.rule("repeatability_weighings")
+    _, rep_clause = rs.rule("repeatability_weighings")
+    n_weighings = rs.repeatability_count(mx)
     repeatability = [
-        {"load": round_to_interval(mx * 0.5, e), "weighings": counts[cls]},
-        {"load": mx, "weighings": counts[cls]},
+        {"load": round_to_interval(mx * 0.5, e), "weighings": n_weighings},
+        {"load": mx, "weighings": n_weighings},
     ]
 
     # ---------- discrimination ----------
@@ -80,8 +81,9 @@ def generate_test_plan(spec: InstrumentSpec, rs: Ruleset) -> dict:
     (default_lo, default_hi), _ = rs.rule("default_temperature_range_c")
     lo = spec.temp_min if spec.temp_min is not None else default_lo
     hi = spec.temp_max if spec.temp_max is not None else default_hi
-    seq, temp_clause = rs.rule("temperature_test_sequence_c")
-    temps = [hi if t == "max" else lo if t == "min" else t for t in seq]
+    _, temp_clause = rs.rule("temperature_test_sequence_c")
+    ref = (lo + hi) / 2 if cls == "I" else 20       # class I: mean of the limits
+    temps = [ref, hi, lo] + ([5] if lo <= 0 else []) + [ref]
 
     return {
         "ruleset_version": rs.version,

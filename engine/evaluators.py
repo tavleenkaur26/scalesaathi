@@ -18,7 +18,7 @@ def _judge_against_mpe(test: str, r: Reading, spec: InstrumentSpec, rs: Ruleset,
     mpe_info = rs.mpe(spec.accuracy_class, r.load, e)
     mpe = mpe_info["mpe"]
     naive = naive_error(r)
-    err = corrected_error(r, d, e0)
+    err = corrected_error(r, e, e0)
     method = "changeover" if err is not None else "naive"
     final_err = err if err is not None else naive
 
@@ -32,7 +32,7 @@ def _judge_against_mpe(test: str, r: Reading, spec: InstrumentSpec, rs: Ruleset,
     expl = (f"Error {final_err:+g} g vs MPE ±{mpe:g} g "
             f"(load = {mpe_info['m']:g}e, band {band_txt}, MPE = {mpe_info['mpe_e']:g}e). ")
     if method == "changeover":
-        expl += f"Changeover method: E = I + d/2 - ΔL - L = {r.indication:g} + {d/2:g} - {r.delta_l:g} - {r.load:g}"
+        expl += f"Changeover method (A.4.4.3): E = I + e/2 - ΔL - L = {r.indication:g} + {e/2:g}"
         if e0 is not None:
             expl += f", corrected by E0 = {e0:+g}"
         expl += ". "
@@ -57,7 +57,7 @@ def _judge_against_mpe(test: str, r: Reading, spec: InstrumentSpec, rs: Ruleset,
 def zero_reference_error(spec: InstrumentSpec, zero_ref: Optional[Reading]) -> Optional[float]:
     if zero_ref is None:
         return None
-    return changeover_error(zero_ref, spec.actual_d)
+    return changeover_error(zero_ref, spec.e)
 
 
 # ------------------------- tests -------------------------
@@ -74,8 +74,7 @@ def eval_eccentricity(inp: EccentricityInput, spec, rs, e0) -> list[TestResult]:
 def eval_repeatability(series: RepeatabilitySeries, spec, rs) -> TestResult:
     """Spread of repeated weighings of one load must not exceed |MPE| for that load."""
     _, clause = rs.rule("repeatability_weighings")
-    counts, _ = rs.rule("repeatability_weighings")
-    d = spec.actual_d
+    d = spec.e
     load = series.readings[0].load
     errors = [changeover_error(r, d) if r.delta_l is not None else naive_error(r) for r in series.readings]
     spread = round(max(errors) - min(errors), 6)
@@ -84,9 +83,10 @@ def eval_repeatability(series: RepeatabilitySeries, spec, rs) -> TestResult:
     result = "PASS" if spread <= mpe + EPS else "FAIL"
     expl = (f"{len(errors)} weighings of {load:g} g; spread of errors = {spread:g} g "
             f"vs allowed |MPE| = {mpe:g} g.")
-    required = counts[spec.accuracy_class]
+    required = rs.repeatability_count(spec.max_capacity)
     if len(errors) < required:
-        expl += f" Warning: class {spec.accuracy_class} needs {required} weighings, only {len(errors)} entered."
+        expl += (f" Warning: type approval requires {required} weighings per series for this Max, "
+                 f"only {len(errors)} entered.")
     util = round(spread / mpe, 4)
     return TestResult(test="repeatability", load=load, e=spec.e, error=spread, mpe=mpe,
                       result=result, utilisation=util,
@@ -114,7 +114,7 @@ def _eval_setting_accuracy(test: str, rule: str, r: Reading, spec, rs) -> TestRe
         return TestResult(test=test, load=r.load, e=spec.e, result="FAIL", mpe=limit,
                           method="naive", clause=clause,
                           explanation="Changeover data (ΔL) is required: a rounded display cannot resolve 0.25e.")
-    err = changeover_error(r, spec.actual_d)
+    err = changeover_error(r, spec.e)
     result = _outcome(err, limit)
     util = round(abs(err) / limit, 4)
     return TestResult(test=test, load=r.load, e=spec.e, error=err, mpe=limit, result=result,
@@ -151,7 +151,7 @@ def eval_temperature(runs: list[TemperatureRun], spec, rs, e0) -> tuple[list[Tes
     # zero drift between consecutive temperatures
     drift_rule, drift_clause = rs.rule("zero_temperature_drift")
     rule = drift_rule.get(spec.accuracy_class, drift_rule["default"])
-    zeros = [(run.temperature, changeover_error(run.zero_reading, spec.actual_d))
+    zeros = [(run.temperature, changeover_error(run.zero_reading, spec.e))
              for run in runs if run.zero_reading is not None and run.zero_reading.delta_l is not None]
     for (t1, z1), (t2, z2) in zip(zeros, zeros[1:]):
         dt = abs(t2 - t1)

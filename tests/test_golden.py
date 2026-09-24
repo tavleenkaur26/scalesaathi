@@ -193,3 +193,29 @@ def test_23_missing_changeover_is_flagged():
     v = evaluate_session(session(weighing=[Reading(load=5000, indication=5005)]), RS)
     assert only(v, "weighing")[0].method == "naive"
     assert any("3.5.3.2" in w for w in v.warnings)
+
+
+def test_24_repeatability_count_for_type_approval():
+    # R76-1 A.4.10: 10 weighings per series if Max < 1000 kg, otherwise at least 3
+    plan = generate_test_plan(SPEC, RS)                     # Max 15 kg
+    assert [s["weighings"] for s in plan["repeatability"]["series"]] == [10, 10]
+    big = InstrumentSpec(max_capacity=2_000_000, min_capacity=10_000, e=500, accuracy_class="III")  # 2 t
+    assert generate_test_plan(big, RS)["repeatability"]["series"][0]["weighings"] == 3
+
+
+def test_25_matches_worked_example_in_R76_A443():
+    # R76-1 A.4.4.3 example: e = 5 g, L = 1000 g, I = 1000 g, dL = 1.5 g -> P = 1001, E = +1 ;
+    # with E0 = +0.5 g the corrected error is Ec = +0.5 g
+    assert changeover_error(Reading(load=1000, indication=1000, delta_l=1.5), 5) == 1.0
+    zero_ref = Reading(load=50, indication=50, delta_l=2.0)          # E0 = 50 + 2.5 - 2.0 - 50 = +0.5
+    v = evaluate_session(session(zero_reference=zero_ref,
+                                 weighing=[Reading(load=1000, indication=1000, delta_l=1.5)]), RS)
+    assert only(v, "weighing")[0].error == 0.5
+
+def test_26_temperature_sequence_rules():
+    # R76-1 A.5.3.1: 5 °C step only if the low limit is <= 0 °C
+    warm = SPEC.model_copy(update={"temp_min": 10, "temp_max": 40})
+    assert generate_test_plan(warm, RS)["temperature"]["sequence_c"] == [20, 40, 10, 20]
+    cls1 = InstrumentSpec(max_capacity=200, min_capacity=0.1, e=0.001, accuracy_class="I",
+                          temp_min=15, temp_max=25)
+    assert generate_test_plan(cls1, RS)["temperature"]["sequence_c"] == [20, 25, 15, 20]
