@@ -194,14 +194,12 @@ def test_23_missing_changeover_is_flagged():
     assert only(v, "weighing")[0].method == "naive"
     assert any("3.5.3.2" in w for w in v.warnings)
 
-
 def test_24_repeatability_count_for_type_approval():
     # R76-1 A.4.10: 10 weighings per series if Max < 1000 kg, otherwise at least 3
     plan = generate_test_plan(SPEC, RS)                     # Max 15 kg
     assert [s["weighings"] for s in plan["repeatability"]["series"]] == [10, 10]
     big = InstrumentSpec(max_capacity=2_000_000, min_capacity=10_000, e=500, accuracy_class="III")  # 2 t
     assert generate_test_plan(big, RS)["repeatability"]["series"][0]["weighings"] == 3
-
 
 def test_25_matches_worked_example_in_R76_A443():
     # R76-1 A.4.4.3 example: e = 5 g, L = 1000 g, I = 1000 g, dL = 1.5 g -> P = 1001, E = +1 ;
@@ -219,3 +217,49 @@ def test_26_temperature_sequence_rules():
     cls1 = InstrumentSpec(max_capacity=200, min_capacity=0.1, e=0.001, accuracy_class="I",
                           temp_min=15, temp_max=25)
     assert generate_test_plan(cls1, RS)["temperature"]["sequence_c"] == [20, 25, 15, 20]
+
+
+# ---------------- 27-31: seeds, reading validation, JSON safety ----------------
+
+import json
+import math
+from pydantic import ValidationError
+from engine import load_seeds, check_reading, check_session_readings, TEST_SOURCE_FIELD
+
+
+def test_27_every_seed_gives_its_expected_result():
+    seeds = load_seeds()
+    assert len(seeds) == 9
+    for seed in seeds:
+        v = evaluate_session(seed["session"], RS)
+        exp = seed["expected"]
+        assert v.overall == exp["overall"], seed["id"]
+        if "failed_tests" in exp:
+            assert v.failed_tests == exp["failed_tests"], seed["id"]
+        for t in exp.get("failed_tests_include", []):
+            assert t in v.failed_tests, seed["id"]
+        for key in ("rounding_traps", "marginal_results"):
+            if key in exp:
+                assert getattr(v, key) == exp[key], (seed["id"], key)
+
+def test_28_reading_validation():
+    assert check_reading(Reading(load=5000, indication=5000, delta_l=2.5), SPEC) == []
+    fields = {i.field for i in check_reading(Reading(load=20000, indication=5003, delta_l=6), SPEC, "weighing[0]")}
+    assert fields == {"weighing[0].load", "weighing[0].indication", "weighing[0].delta_l"}
+
+def test_29_invalid_reading_withholds_verdict():
+    v = evaluate_session(session(weighing=[Reading(load=5000, indication=5003, delta_l=2.5)]), RS)
+    assert v.overall == "INCOMPLETE"
+    assert any("weighing[0].indication" in w for w in v.warnings)
+
+def test_30_nan_and_infinity_rejected():
+    for bad in (float("nan"), float("inf")):
+        with pytest.raises(ValidationError):
+            Reading(load=1000, indication=bad)
+
+def test_31_outputs_are_strict_json():
+    for seed in load_seeds():
+        v = evaluate_session(seed["session"], RS)
+        json.dumps(v.model_dump(mode="json"), allow_nan=False)   # raises on NaN/inf
+        json.dumps(generate_test_plan(seed["session"].spec, RS), allow_nan=False)
+        assert {r.test for r in v.results} <= set(TEST_SOURCE_FIELD)

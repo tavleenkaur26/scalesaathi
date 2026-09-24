@@ -1,0 +1,470 @@
+{
+  "id": "02_clear_fail",
+  "label": "Clear fail at Max",
+  "description": "At Max (15 kg) the error is +20 g against an MPE of ±7.5 g. Naive and R 76 methods agree.",
+  "meta": {
+    "manufacturer": "Demo Weighing Co.",
+    "model": "DW-15X",
+    "instrument_type": "Bench scale"
+  },
+  "expected": {
+    "overall": "FAIL",
+    "failed_tests": [
+      "weighing"
+    ],
+    "rounding_traps": 0
+  },
+  "session": {
+    "spec": {
+      "max_capacity": 15000,
+      "min_capacity": 100,
+      "e": 5,
+      "accuracy_class": "III",
+      "max_tare": 0,
+      "support_points": 4
+    },
+    "zero_reference": {
+      "load": 50,
+      "indication": 50,
+      "delta_l": 2.5,
+      "label": "10e"
+    },
+    "weighing": [
+      {
+        "load": 100,
+        "indication": 100,
+        "delta_l": 2.5,
+        "label": "increasing"
+      },
+      {
+        "load": 2500,
+        "indication": 2500,
+        "delta_l": 2.0,
+        "label": "increasing"
+      },
+      {
+        "load": 2505,
+        "indication": 2505,
+        "delta_l": 3.0,
+        "label": "increasing"
+      },
+      {
+        "load": 5000,
+        "indication": 5000,
+        "delta_l": 1.5,
+        "label": "increasing"
+      },
+      {
+        "load": 6200,
+        "indication": 6200,
+        "delta_l": 2.5,
+        "label": "increasing"
+      },
+      {
+        "load": 7500,
+        "indication": 7500,
+        "delta_l": 2.0,
+        "label": "increasing"
+      },
+      {
+        "load": 10000,
+        "indication": 10000,
+        "delta_l": 3.0,
+        "label": "increasing"
+      },
+      {
+        "load": 10005,
+        "indication": 10005,
+        "delta_l": 1.5,
+        "label": "increasing"
+      },
+      {
+        "load": 12500,
+        "indication": 12500,
+        "delta_l": 2.5,
+        "label": "increasing"
+      },
+      {
+        "load": 15000,
+        "indication": 15020,
+        "delta_l": 2.5,
+        "label": "increasing"
+      },
+      {
+        "load": 15000,
+        "indication": 15000,
+        "delta_l": 2.0,
+        "label": "decreasing"
+      },
+      {
+        "load": 12500,
+        "indication": 12500,
+        "delta_l": 3.0,
+        "label": "decreasing"
+      },
+      {
+        "load": 10005,
+        "indication": 10005,
+        "delta_l": 1.5,
+        "label": "decreasing"
+      },
+      {
+        "load": 10000,
+        "indication": 10000,
+        "delta_l": 2.5,
+        "label": "decreasing"
+      },
+      {
+        "load": 7500,
+        "indication": 7500,
+        "delta_l": 2.0,
+        "label": "decreasing"
+      },
+      {
+        "load": 6200,
+        "indication": 6200,
+        "delta_l": 3.0,
+        "label": "decreasing"
+      },
+      {
+        "load": 5000,
+        "indication": 5000,
+        "delta_l": 1.5,
+        "label": "decreasing"
+      },
+      {
+        "load": 2505,
+        "indication": 2505,
+        "delta_l": 2.5,
+        "label": "decreasing"
+      },
+      {
+        "load": 2500,
+        "indication": 2500,
+        "delta_l": 2.0,
+        "label": "decreasing"
+      },
+      {
+        "load": 100,
+        "indication": 100,
+        "delta_l": 3.0,
+        "label": "decreasing"
+      }
+    ],
+    "eccentricity": {
+      "readings": [
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 2.5,
+          "label": "Centre"
+        },
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 2.0,
+          "label": "Segment 1"
+        },
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 3.0,
+          "label": "Segment 2"
+        },
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 2.5,
+          "label": "Segment 3"
+        },
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 2.0,
+          "label": "Segment 4"
+        }
+      ]
+    },
+    "repeatability": [
+      {
+        "readings": [
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.0
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.5
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 3.0
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.0
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.5
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 3.0
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.0
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.5
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 3.0
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.0
+          }
+        ]
+      },
+      {
+        "readings": [
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.5
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 3.0
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.0
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.5
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 3.0
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.0
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.5
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 3.0
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.0
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.5
+          }
+        ]
+      }
+    ],
+    "discrimination": [
+      {
+        "load": 100,
+        "indication_before": 100,
+        "indication_after": 105
+      },
+      {
+        "load": 7500,
+        "indication_before": 7500,
+        "indication_after": 7505
+      },
+      {
+        "load": 15000,
+        "indication_before": 15000,
+        "indication_after": 15005
+      }
+    ],
+    "zero_setting": {
+      "load": 0,
+      "indication": 0,
+      "delta_l": 2.5
+    },
+    "tare_setting": {
+      "load": 0,
+      "indication": 0,
+      "delta_l": 2.0
+    },
+    "temperature": [
+      {
+        "temperature": 20,
+        "zero_reading": {
+          "load": 0,
+          "indication": 0,
+          "delta_l": 2.5
+        },
+        "readings": [
+          {
+            "load": 100,
+            "indication": 100,
+            "delta_l": 2.5
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.5
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.5
+          }
+        ]
+      },
+      {
+        "temperature": 40,
+        "zero_reading": {
+          "load": 0,
+          "indication": 0,
+          "delta_l": 2.0
+        },
+        "readings": [
+          {
+            "load": 100,
+            "indication": 100,
+            "delta_l": 2.5
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.5
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.5
+          }
+        ]
+      },
+      {
+        "temperature": -10,
+        "zero_reading": {
+          "load": 0,
+          "indication": 0,
+          "delta_l": 3.0
+        },
+        "readings": [
+          {
+            "load": 100,
+            "indication": 100,
+            "delta_l": 2.5
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.5
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.5
+          }
+        ]
+      },
+      {
+        "temperature": 5,
+        "zero_reading": {
+          "load": 0,
+          "indication": 0,
+          "delta_l": 2.5
+        },
+        "readings": [
+          {
+            "load": 100,
+            "indication": 100,
+            "delta_l": 2.5
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.5
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.5
+          }
+        ]
+      },
+      {
+        "temperature": 20,
+        "zero_reading": {
+          "load": 0,
+          "indication": 0,
+          "delta_l": 2.5
+        },
+        "readings": [
+          {
+            "load": 100,
+            "indication": 100,
+            "delta_l": 2.5
+          },
+          {
+            "load": 7500,
+            "indication": 7500,
+            "delta_l": 2.5
+          },
+          {
+            "load": 15000,
+            "indication": 15000,
+            "delta_l": 2.5
+          }
+        ]
+      }
+    ],
+    "disturbances": [
+      {
+        "name": "Voltage variation",
+        "indication_without": 7500,
+        "indication_with": 7500
+      },
+      {
+        "name": "Short-time power reduction",
+        "indication_without": 7500,
+        "indication_with": 7505
+      },
+      {
+        "name": "Electrostatic discharge",
+        "indication_without": 7500,
+        "indication_with": 7500
+      }
+    ]
+  }
+}

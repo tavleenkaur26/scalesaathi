@@ -1,15 +1,36 @@
 """Input and output shapes for the engine. This file IS the contract with P2 (backend)
 and P3 (frontend). All masses are in grams; the frontend converts kg if needed."""
 from typing import Literal, Optional
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 AccuracyClass = Literal["I", "II", "III", "IIII"]
 Outcome = Literal["PASS", "FAIL", "RECORDED"]
 
+# Every value TestResult.test can take, mapped to the SessionInput field it comes from.
+TestName = Literal["weighing", "eccentricity", "repeatability", "discrimination",
+                   "zero_setting", "tare_setting", "temperature", "temperature_zero_drift",
+                   "disturbance"]
+TEST_SOURCE_FIELD = {
+    "weighing": "weighing",
+    "eccentricity": "eccentricity",
+    "repeatability": "repeatability",
+    "discrimination": "discrimination",
+    "zero_setting": "zero_setting",
+    "tare_setting": "tare_setting",
+    "temperature": "temperature[].readings",
+    "temperature_zero_drift": "temperature[].zero_reading",
+    "disturbance": "disturbances",
+}
+
+
+class StrictModel(BaseModel):
+    """Rejects NaN and infinity, so every output is valid JSON (Postgres-safe)."""
+    model_config = ConfigDict(allow_inf_nan=False)
+
 
 # ------------------------- inputs -------------------------
 
-class InstrumentSpec(BaseModel):
+class InstrumentSpec(StrictModel):
     max_capacity: float = Field(gt=0, description="Max, in g")
     min_capacity: float = Field(gt=0, description="Min, in g")
     e: float = Field(gt=0, description="Verification scale interval, in g")
@@ -25,7 +46,7 @@ class InstrumentSpec(BaseModel):
         return self.d if self.d is not None else self.e
 
 
-class Reading(BaseModel):
+class Reading(StrictModel):
     """One observation. delta_l = total small weights added until the display
     changed over by one interval (changeover-point method). If delta_l is None,
     only the naive error (indication - load) can be computed."""
@@ -35,33 +56,33 @@ class Reading(BaseModel):
     label: Optional[str] = None  # e.g. "increasing", "decreasing", "centre", "corner 1"
 
 
-class EccentricityInput(BaseModel):
+class EccentricityInput(StrictModel):
     readings: list[Reading]  # one per position, label = position name
 
 
-class RepeatabilitySeries(BaseModel):
+class RepeatabilitySeries(StrictModel):
     readings: list[Reading]  # same load weighed repeatedly
 
 
-class DiscriminationInput(BaseModel):
+class DiscriminationInput(StrictModel):
     load: float
     indication_before: float
     indication_after: float  # after adding the extra 1.4 d load
 
 
-class TemperatureRun(BaseModel):
+class TemperatureRun(StrictModel):
     temperature: float
     readings: list[Reading] = []
     zero_reading: Optional[Reading] = None  # near-zero reading at this temperature
 
 
-class DisturbanceInput(BaseModel):
+class DisturbanceInput(StrictModel):
     name: str  # e.g. "Voltage dip", "Electrostatic discharge"
     indication_without: float
     indication_with: float
 
 
-class SessionInput(BaseModel):
+class SessionInput(StrictModel):
     spec: InstrumentSpec
     zero_reference: Optional[Reading] = None  # E0 for corrected error (A.4.4.3)
     weighing: list[Reading] = []
@@ -76,22 +97,22 @@ class SessionInput(BaseModel):
 
 # ------------------------- outputs -------------------------
 
-class SpecIssue(BaseModel):
+class SpecIssue(StrictModel):
     field: str
     severity: Literal["error", "warning"]
     message: str
     clause: str
 
 
-class SpecCheckResult(BaseModel):
+class SpecCheckResult(StrictModel):
     valid: bool
     n: float
     matched_band: Optional[dict] = None
     issues: list[SpecIssue] = []
 
 
-class TestResult(BaseModel):
-    test: str
+class TestResult(StrictModel):
+    test: TestName
     label: Optional[str] = None
     load: Optional[float] = None
     e: float
@@ -107,7 +128,7 @@ class TestResult(BaseModel):
     explanation: str
 
 
-class Verdict(BaseModel):
+class Verdict(StrictModel):
     overall: Literal["PASS", "FAIL", "INCOMPLETE"]
     ruleset_id: str
     ruleset_version: str

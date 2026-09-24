@@ -1,0 +1,63 @@
+{
+  "id": "09_in_progress",
+  "label": "Session in progress",
+  "description": "Only the zero reference and eccentricity entered so far. For the dashboard's 'in process' state.",
+  "meta": {
+    "manufacturer": "Demo Weighing Co.",
+    "model": "DW-30",
+    "instrument_type": "Bench scale"
+  },
+  "expected": {
+    "overall": "INCOMPLETE"
+  },
+  "session": {
+    "spec": {
+      "max_capacity": 15000,
+      "min_capacity": 100,
+      "e": 5,
+      "accuracy_class": "III",
+      "max_tare": 0,
+      "support_points": 4
+    },
+    "zero_reference": {
+      "load": 50,
+      "indication": 50,
+      "delta_l": 2.5,
+      "label": "10e"
+    },
+    "eccentricity": {
+      "readings": [
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 2.5,
+          "label": "Centre"
+        },
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 2.0,
+          "label": "Segment 1"
+        },
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 3.0,
+          "label": "Segment 2"
+        },
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 2.5,
+          "label": "Segment 3"
+        },
+        {
+          "load": 5000,
+          "indication": 5000,
+          "delta_l": 2.0,
+          "label": "Segment 4"
+        }
+      ]
+    }
+  }
+}

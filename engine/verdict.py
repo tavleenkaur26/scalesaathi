@@ -3,6 +3,7 @@ This is the single function the backend calls: evaluate_session(session, ruleset
 from .ruleset import Ruleset
 from .schemas import SessionInput, Verdict
 from .spec_check import check_spec
+from .reading_check import check_session_readings
 from . import evaluators as ev
 
 
@@ -13,6 +14,10 @@ def evaluate_session(session: SessionInput, rs: Ruleset) -> Verdict:
     spec_result = check_spec(spec, rs)
     for issue in spec_result.issues:
         warnings.append(f"Spec {issue.severity}: {issue.message} ({issue.clause})")
+
+    reading_issues = check_session_readings(session)
+    for issue in reading_issues:
+        warnings.append(f"Invalid reading at {issue.field}: {issue.message}")
 
     e0 = ev.zero_reference_error(spec, session.zero_reference)
 
@@ -48,6 +53,9 @@ def evaluate_session(session: SessionInput, rs: Ruleset) -> Verdict:
     if not spec_result.valid:
         overall = "FAIL"
         failed = ["spec_check"] + failed
+    elif any(i.severity == "error" for i in reading_issues):
+        overall = "INCOMPLETE"
+        warnings.append("Verdict withheld: fix the invalid readings listed above.")
     elif not session.weighing:
         overall = "INCOMPLETE"
         warnings.append("No weighing test readings entered yet.")
