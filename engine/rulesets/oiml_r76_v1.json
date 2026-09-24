@@ -4,24 +4,38 @@
   "version": "1.0.0",
   "unit": "g",
   "description": "Metrological limits for non-automatic weighing instruments. Every value carries the clause it comes from. Set 'verified' to true only after checking it against the OIML R 76-1 PDF.",
-
   "classes": {
     "I": {
       "name": "Special accuracy",
       "classification": {
         "clause": "R76-1 3.2, Table 3",
-        "verified": false,
+        "verified": true,
         "bands": [
-          { "e_min": 0.001, "e_max": null, "n_min": 50000, "n_max": null, "min_capacity_e": 100 }
+          {
+            "e_min": 0.001,
+            "e_max": null,
+            "n_min": 50000,
+            "n_max": null,
+            "min_capacity_e": 100
+          }
         ]
       },
       "mpe": {
         "clause": "R76-1 3.5.1, Table 6",
-        "verified": false,
+        "verified": true,
         "bands": [
-          { "m_max": 50000, "mpe_e": 0.5 },
-          { "m_max": 200000, "mpe_e": 1.0 },
-          { "m_max": null, "mpe_e": 1.5 }
+          {
+            "m_max": 50000,
+            "mpe_e": 0.5
+          },
+          {
+            "m_max": 200000,
+            "mpe_e": 1.0
+          },
+          {
+            "m_max": null,
+            "mpe_e": 1.5
+          }
         ]
       }
     },
@@ -29,19 +43,40 @@
       "name": "High accuracy",
       "classification": {
         "clause": "R76-1 3.2, Table 3",
-        "verified": false,
+        "verified": true,
         "bands": [
-          { "e_min": 0.001, "e_max": 0.05, "n_min": 100, "n_max": 100000, "min_capacity_e": 20 },
-          { "e_min": 0.1, "e_max": null, "n_min": 5000, "n_max": 100000, "min_capacity_e": 50 }
+          {
+            "e_min": 0.001,
+            "e_max": 0.05,
+            "n_min": 100,
+            "n_max": 100000,
+            "min_capacity_e": 20
+          },
+          {
+            "e_min": 0.1,
+            "e_max": null,
+            "n_min": 5000,
+            "n_max": 100000,
+            "min_capacity_e": 50
+          }
         ]
       },
       "mpe": {
         "clause": "R76-1 3.5.1, Table 6",
-        "verified": false,
+        "verified": true,
         "bands": [
-          { "m_max": 5000, "mpe_e": 0.5 },
-          { "m_max": 20000, "mpe_e": 1.0 },
-          { "m_max": 100000, "mpe_e": 1.5 }
+          {
+            "m_max": 5000,
+            "mpe_e": 0.5
+          },
+          {
+            "m_max": 20000,
+            "mpe_e": 1.0
+          },
+          {
+            "m_max": 100000,
+            "mpe_e": 1.5
+          }
         ]
       }
     },
@@ -49,19 +84,40 @@
       "name": "Medium accuracy",
       "classification": {
         "clause": "R76-1 3.2, Table 3",
-        "verified": false,
+        "verified": true,
         "bands": [
-          { "e_min": 0.1, "e_max": 2, "n_min": 100, "n_max": 10000, "min_capacity_e": 20 },
-          { "e_min": 5, "e_max": null, "n_min": 500, "n_max": 10000, "min_capacity_e": 20 }
+          {
+            "e_min": 0.1,
+            "e_max": 2,
+            "n_min": 100,
+            "n_max": 10000,
+            "min_capacity_e": 20
+          },
+          {
+            "e_min": 5,
+            "e_max": null,
+            "n_min": 500,
+            "n_max": 10000,
+            "min_capacity_e": 20
+          }
         ]
       },
       "mpe": {
         "clause": "R76-1 3.5.1, Table 6",
-        "verified": false,
+        "verified": true,
         "bands": [
-          { "m_max": 500, "mpe_e": 0.5 },
-          { "m_max": 2000, "mpe_e": 1.0 },
-          { "m_max": 10000, "mpe_e": 1.5 }
+          {
+            "m_max": 500,
+            "mpe_e": 0.5
+          },
+          {
+            "m_max": 2000,
+            "mpe_e": 1.0
+          },
+          {
+            "m_max": 10000,
+            "mpe_e": 1.5
+          }
         ]
       }
     },
@@ -69,33 +125,51 @@
       "name": "Ordinary accuracy",
       "classification": {
         "clause": "R76-1 3.2, Table 3",
-        "verified": false,
+        "verified": true,
         "bands": [
-          { "e_min": 5, "e_max": null, "n_min": 100, "n_max": 1000, "min_capacity_e": 10 }
+          {
+            "e_min": 5,
+            "e_max": null,
+            "n_min": 100,
+            "n_max": 1000,
+            "min_capacity_e": 10
+          }
         ]
       },
       "mpe": {
         "clause": "R76-1 3.5.1, Table 6",
-        "verified": false,
+        "verified": true,
         "bands": [
-          { "m_max": 50, "mpe_e": 0.5 },
-          { "m_max": 200, "mpe_e": 1.0 },
-          { "m_max": 1000, "mpe_e": 1.5 }
+          {
+            "m_max": 50,
+            "mpe_e": 0.5
+          },
+          {
+            "m_max": 200,
+            "mpe_e": 1.0
+          },
+          {
+            "m_max": 1000,
+            "mpe_e": 1.5
+          }
         ]
       }
     }
   },
-
   "rules": {
     "scale_interval_form": {
-      "value": [1, 2, 5],
-      "clause": "R76-1 3.4 (e in the form 1, 2 or 5 x 10^k)",
+      "value": [
+        1,
+        2,
+        5
+      ],
+      "clause": "R76-1 4.2.2.1",
       "verified": false
     },
     "in_service_multiplier": {
       "value": 2,
       "clause": "R76-1 3.5.2",
-      "verified": false
+      "verified": true
     },
     "zero_setting_accuracy_e": {
       "value": 0.25,
@@ -109,13 +183,13 @@
     },
     "discrimination_extra_load_d": {
       "value": 1.4,
-      "clause": "R76-1 3.8.2 / A.4.8",
-      "verified": false
+      "clause": "R76-1 3.8.2.2 / A.4.8",
+      "verified": true
     },
     "significant_fault_e": {
       "value": 1,
-      "clause": "R76-1 T.5.5 / 4.1.2",
-      "verified": false
+      "clause": "R76-1 T.5.5.6",
+      "verified": true
     },
     "weighing_test_min_loads": {
       "value": 10,
@@ -123,32 +197,82 @@
       "verified": false
     },
     "repeatability_weighings": {
-      "value": { "I": 6, "II": 6, "III": 3, "IIII": 3 },
-      "clause": "R76-1 3.6.1 / A.4.10",
+      "value": {
+        "I": 6,
+        "II": 6,
+        "III": 3,
+        "IIII": 3
+      },
+      "clause": "R76-1 3.6.1 (requirement) / A.4.10 (number of weighings)",
       "verified": false
     },
     "eccentricity": {
-      "value": { "fraction_up_to_4_supports": 0.3333333333, "per_support_divisor_offset": 1 },
-      "clause": "R76-1 3.6.2 / A.4.7",
-      "verified": false
+      "value": {
+        "fraction_up_to_4_supports": 0.3333333333,
+        "per_support_divisor_offset": 1
+      },
+      "clause": "R76-1 3.6.2.1, 3.6.2.2 / A.4.7",
+      "verified": true
     },
     "default_temperature_range_c": {
-      "value": [-10, 40],
+      "value": [
+        -10,
+        40
+      ],
       "clause": "R76-1 3.9.2.1",
-      "verified": false
+      "verified": true
     },
     "zero_temperature_drift": {
-      "value": { "I": { "e": 1, "per_c": 1 }, "default": { "e": 1, "per_c": 5 } },
+      "value": {
+        "I": {
+          "e": 1,
+          "per_c": 1
+        },
+        "default": {
+          "e": 1,
+          "per_c": 5
+        }
+      },
       "clause": "R76-1 3.9.2.3",
-      "verified": false
+      "verified": true
     },
     "temperature_test_sequence_c": {
-      "value": [20, "max", "min", 5, 20],
+      "value": [
+        20,
+        "max",
+        "min",
+        5,
+        20
+      ],
       "clause": "R76-1 A.5.3.1",
       "verified": false
+    },
+    "rounding_elimination_threshold": {
+      "value": 0.2,
+      "clause": "R76-1 3.5.3.2",
+      "note": "Rounding error of a digital indication shall be eliminated if d > 0.2e",
+      "verified": true
+    },
+    "temperature_range_min_width_c": {
+      "value": {
+        "I": 5,
+        "II": 15,
+        "III": 30,
+        "IIII": 30
+      },
+      "clause": "R76-1 3.9.2.2",
+      "verified": true
+    },
+    "auxiliary_indicating_classes": {
+      "value": [
+        "I",
+        "II"
+      ],
+      "clause": "R76-1 3.1.2 Table 2, 3.4.1",
+      "note": "Only classes I and II may have an auxiliary indicating device; otherwise e = d",
+      "verified": true
     }
   },
-
   "advisory": {
     "marginal_threshold": {
       "value": 0.8,

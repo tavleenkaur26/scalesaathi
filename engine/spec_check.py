@@ -25,13 +25,15 @@ def check_spec(spec: InstrumentSpec, rs: Ruleset) -> SpecCheckResult:
         issues.append(SpecIssue(field="e", severity="error", clause=form_clause,
                                 message=f"e = {e} g is not of the form 1, 2 or 5 x 10^k."))
 
-    # 2. d must not exceed e; classes III/IIII normally have d = e
+    # 2. d must not exceed e; only classes I and II may have d < e (auxiliary indicating device)
+    aux_classes, aux_clause = rs.rule("auxiliary_indicating_classes")
     if d > e + EPS:
-        issues.append(SpecIssue(field="d", severity="error", clause="R76-1 3.4",
+        issues.append(SpecIssue(field="d", severity="error", clause=aux_clause,
                                 message=f"Actual interval d = {d} g cannot be larger than e = {e} g."))
-    elif spec.accuracy_class in ("III", "IIII") and abs(d - e) > EPS:
-        issues.append(SpecIssue(field="d", severity="warning", clause="R76-1 3.4",
-                                message="For class III/IIII instruments e is normally equal to d."))
+    elif spec.accuracy_class not in aux_classes and abs(d - e) > EPS:
+        issues.append(SpecIssue(field="d", severity="error", clause=aux_clause,
+                                message=f"Class {spec.accuracy_class} instruments cannot have an auxiliary "
+                                        f"indicating device, so e must equal d."))
 
     # 3. Max must be a whole number of intervals
     if abs(n - round(n)) > 1e-6:
@@ -69,6 +71,15 @@ def check_spec(spec: InstrumentSpec, rs: Ruleset) -> SpecCheckResult:
     if spec.temp_min is not None and spec.temp_max is not None and spec.temp_min >= spec.temp_max:
         issues.append(SpecIssue(field="temp_min", severity="error", clause="R76-1 3.9.2",
                                 message="Lower temperature limit must be below the upper limit."))
+
+    # 6. declared temperature range must be at least the class minimum width
+    if spec.temp_min is not None and spec.temp_max is not None and spec.temp_max > spec.temp_min:
+        widths, w_clause = rs.rule("temperature_range_min_width_c")
+        need = widths[spec.accuracy_class]
+        if spec.temp_max - spec.temp_min < need - EPS:
+            issues.append(SpecIssue(field="temp_max", severity="error", clause=w_clause,
+                                    message=f"Declared temperature range is {spec.temp_max - spec.temp_min:g} °C; "
+                                            f"class {spec.accuracy_class} requires at least {need} °C."))
 
     valid = not any(i.severity == "error" for i in issues)
     return SpecCheckResult(valid=valid, n=round(n, 6), matched_band=band, issues=issues)

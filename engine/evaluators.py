@@ -41,6 +41,10 @@ def _judge_against_mpe(test: str, r: Reading, spec: InstrumentSpec, rs: Ruleset,
                      f"would have given {naive_result}. ")
     else:
         expl += "No changeover data entered, so only the rounded (naive) error is available. "
+        thr, thr_clause = rs.rule("rounding_elimination_threshold")
+        if d > thr * e + EPS:
+            expl += (f"Warning: {thr_clause} requires the rounding error to be eliminated when d > {thr:g}e; "
+                     "enter ΔL for an R 76-compliant result. ")
     if marginal:
         expl += f"Marginal: uses {util*100:.0f}% of the MPE; in-service limits are only 2x wider, so drift may cause failure."
 

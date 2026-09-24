@@ -39,6 +39,11 @@ def evaluate_session(session: SessionInput, rs: Ruleset) -> Verdict:
     if session.weighing and spec.max_capacity not in loads:
         warnings.append("Weighing test does not include Max.")
 
+    thr, thr_clause = rs.rule("rounding_elimination_threshold")
+    if spec.actual_d > thr * spec.e and any(r.method == "naive" for r in results):
+        warnings.append(f"Some readings have no changeover data (ΔL). {thr_clause} requires rounding "
+                        f"error to be eliminated when d > {thr:g}e, so those results are not R 76-compliant.")
+
     failed = sorted({r.test for r in results if r.result == "FAIL"})
     if not spec_result.valid:
         overall = "FAIL"

@@ -174,3 +174,22 @@ def test_20_test_plan_covers_boundaries():
     assert len(loads) >= 10
     assert plan["eccentricity"]["load"] == 5000
     assert plan["temperature"]["sequence_c"] == [20, 40, -10, 5, 20]
+
+
+# ---------------- 21-23: checks added after verifying against the R 76-1 PDF ----------------
+
+def test_21_class_III_requires_e_equals_d():
+    # R76-1 3.1.2 Table 2 + 3.4.1: auxiliary indicating devices only for classes I and II
+    res = check_spec(SPEC.model_copy(update={"d": 1}), RS)
+    assert not res.valid and any(i.field == "d" for i in res.issues)
+
+def test_22_temperature_range_too_narrow():
+    # R76-1 3.9.2.2: class III needs a range of at least 30 °C
+    res = check_spec(SPEC.model_copy(update={"temp_min": 10, "temp_max": 30}), RS)
+    assert not res.valid and any("30" in i.message for i in res.issues)
+
+def test_23_missing_changeover_is_flagged():
+    # R76-1 3.5.3.2: rounding error must be eliminated when d > 0.2e (here d = e)
+    v = evaluate_session(session(weighing=[Reading(load=5000, indication=5005)]), RS)
+    assert only(v, "weighing")[0].method == "naive"
+    assert any("3.5.3.2" in w for w in v.warnings)
