@@ -32,7 +32,7 @@ def _judge_against_mpe(test: str, r: Reading, spec: InstrumentSpec, rs: Ruleset,
     expl = (f"Error {final_err:+g} g vs MPE ±{mpe:g} g "
             f"(load = {mpe_info['m']:g}e, band {band_txt}, MPE = {mpe_info['mpe_e']:g}e). ")
     if method == "changeover":
-        expl += f"Changeover method (A.4.4.3): E = I + e/2 - ΔL - L = {r.indication:g} + {e/2:g}"
+        expl += f"Changeover method (A.4.4.3): E = I + e/2 - ΔL - L = {r.indication:g} + {e/2:g} - {r.delta_l:g} - {r.load:g}"
         if e0 is not None:
             expl += f", corrected by E0 = {e0:+g}"
         expl += ". "
