@@ -7,6 +7,17 @@ from .ruleset import Ruleset
 from .schemas import InstrumentSpec
 
 
+# Typical electronic-instrument disturbance tests (R 76-1 Annex B); record-only in this prototype.
+DISTURBANCE_TESTS = [
+    "Voltage dips and short interruptions",
+    "Electrical fast transients (bursts)",
+    "Surges",
+    "Electrostatic discharge",
+    "Radiated electromagnetic fields",
+    "Conducted radio-frequency fields",
+]
+
+
 def generate_test_plan(spec: InstrumentSpec, rs: Ruleset) -> dict:
     e, d = spec.e, spec.actual_d
     mx, mn = spec.max_capacity, spec.min_capacity
@@ -84,6 +95,12 @@ def generate_test_plan(spec: InstrumentSpec, rs: Ruleset) -> dict:
     _, temp_clause = rs.rule("temperature_test_sequence_c")
     ref = (lo + hi) / 2 if cls == "I" else 20       # class I: mean of the limits
     temps = [ref, hi, lo] + ([5] if lo <= 0 else []) + [ref]
+    # A.5.3.1: a weighing test at every temperature. Min, ~50% Max and Max keep it practical.
+    temp_loads = sorted({round_to_interval(mn, e), round_to_interval(mx / 2, e), mx})
+    temp_points = [{"load": l, "mpe": rs.mpe(cls, l, e)["mpe"]} for l in temp_loads]
+
+    # ---------- disturbances (record-only, significant-fault check) ----------
+    fault_factor, fault_clause = rs.rule("significant_fault_e")
 
     return {
         "ruleset_version": rs.version,
@@ -97,5 +114,12 @@ def generate_test_plan(spec: InstrumentSpec, rs: Ruleset) -> dict:
                          "limit": rs.rule("zero_setting_accuracy_e")[0] * e},
         "tare_setting": {"clause": rs.rule("tare_setting_accuracy_e")[1],
                          "limit": rs.rule("tare_setting_accuracy_e")[0] * e},
-        "temperature": {"clause": temp_clause, "sequence_c": temps},
+        "temperature": {"clause": temp_clause, "sequence_c": temps, "loads": temp_points,
+                        "zero_reading": True,
+                        "note": "At each temperature: weigh every load (with ΔL) and take a near-zero "
+                                "reading (with ΔL) so the effect of temperature on zero can be checked."},
+        "disturbances": {"clause": fault_clause, "limit": fault_factor * e,
+                         "items": [{"name": n} for n in DISTURBANCE_TESTS],
+                         "note": "Record the indication with and without each disturbance from the lab "
+                                 "test sheet. A difference above e is a significant fault."},
     }

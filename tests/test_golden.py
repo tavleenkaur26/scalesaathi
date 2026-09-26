@@ -263,3 +263,24 @@ def test_31_outputs_are_strict_json():
         json.dumps(v.model_dump(mode="json"), allow_nan=False)   # raises on NaN/inf
         json.dumps(generate_test_plan(seed["session"].spec, RS), allow_nan=False)
         assert {r.test for r in v.results} <= set(TEST_SOURCE_FIELD)
+
+
+# ---------------- 32-33: temperature loads, disturbances, demo ruleset ----------------
+
+def test_32_plan_has_temperature_loads_and_disturbances():
+    plan = generate_test_plan(SPEC, RS)
+    assert [p["load"] for p in plan["temperature"]["loads"]] == [100, 7500, 15000]
+    assert plan["temperature"]["zero_reading"] is True
+    assert len(plan["disturbances"]["items"]) >= 1 and plan["disturbances"]["limit"] == 5
+
+def test_33_demo_ruleset_flips_the_reverse_trap_approval():
+    # v2 demo: class III MPE up to 500e tightened 0.5e -> 0.4e (±2.5 g -> ±2.0 g for e = 5 g).
+    # Seed 04 passes at +2.5 g under v1 and must fail under v2; nothing else flips.
+    import importlib.util, pathlib
+    path = pathlib.Path(__file__).resolve().parent.parent / "scripts" / "make_demo_ruleset.py"
+    spec = importlib.util.spec_from_file_location("make_demo_ruleset", path)
+    mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
+    v2 = load_ruleset_from_dict(mod.build_demo(RS.data))
+    report = ruleset_impact({s["id"]: s["session"] for s in load_seeds()}, RS, v2)
+    flipped = [c["session_id"] for c in report["changes"] if c["overall_before"] != c["overall_after"]]
+    assert flipped == ["04_reverse_rounding_trap"]
