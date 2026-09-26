@@ -48,6 +48,21 @@ async function request(path, { method = "GET", body, isForm = false, auth = true
   return data;
 }
 
+// Downloads a file response (CSV/PDF/DOCX) through the auth header — <a href> can't
+// attach a Bearer token — then triggers the browser's save dialog. `request()` already
+// returns a Blob for any non-JSON response, so this just reuses it.
+async function downloadBlob(path, filename) {
+  const blob = await request(path);
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export const api = {
   // ---------- auth ----------
   login: (email, password) => request("/auth/login", { method: "POST", body: { email, password }, auth: false }),
@@ -114,4 +129,12 @@ export const api = {
   failureInsights: () => request("/dashboard/failure-insights"),
   reportPdfUrl: (sessionId, lang = "en") => `${BASE_URL}/reports/${sessionId}/pdf?lang=${lang}`,
   reportDocxUrl: (sessionId, lang = "en") => `${BASE_URL}/reports/${sessionId}/docx?lang=${lang}`,
+  downloadReportPdf: (sessionId, filename, lang = "en") =>
+    downloadBlob(`/reports/${sessionId}/pdf?lang=${lang}`, filename),
+  downloadReportDocx: (sessionId, filename, lang = "en") =>
+    downloadBlob(`/reports/${sessionId}/docx?lang=${lang}`, filename),
+  exportReportsCsv: (params = {}) => {
+    const qs = new URLSearchParams(params).toString();
+    return downloadBlob(`/reports/export.csv${qs ? `?${qs}` : ""}`, "scalesaathi_reports.csv");
+  },
 };

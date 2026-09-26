@@ -1,0 +1,56 @@
+.repository-page { color: #342e23; }
+.repository-card { padding: 15px; }
+
+.repository-controls {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.6fr) minmax(140px, 1fr) minmax(140px, 1fr) minmax(150px, 1fr) minmax(130px, 1fr) minmax(150px, 1fr) minmax(150px, 1fr) auto;
+  gap: 8px;
+  align-items: center;
+  margin: 0 0 13px;
+}
+.repository-control { min-width: 0; }
+.repository-control--search { min-height: 38px; }
+.repository-input {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  padding-inline: 10px;
+  border: 1px solid #ded6c2;
+  border-radius: 4px;
+  background: #fffff7;
+  color: #3c362b;
+  font: 0.81rem var(--font-body);
+}
+.repository-input::placeholder { color: #918a79; }
+.repository-input:focus { outline: none; border-color: #92764b; box-shadow: 0 0 0 2px rgb(115 85 48 / 8%); }
+.repository-date {
+  display: flex;
+  min-height: 38px;
+  align-items: center;
+  padding-inline: 8px;
+  border: 1px solid #ded6c2;
+  border-radius: 4px;
+  background: #fffff7;
+}
+.repository-date input { width: 100%; min-width: 0; border: 0; outline: none; background: transparent; color: #3c362b; font: 0.78rem var(--font-body); }
+.repository-control-actions { display: flex; gap: 6px; grid-column: 1 / -1; justify-content: flex-end; }
+
+.repository-action-error { margin-bottom: 10px; }
+.repository-table { min-width: 900px; }
+.repository-table td strong, .repository-table td small { display: block; font-weight: 400; }
+.repository-table td strong { color: #514a3d; }
+.repository-table td small { margin-top: 3px; color: #817865; font-size: 0.65rem; }
+.repository-row-actions { display: flex; gap: 10px; }
+.repository-row-actions .instrument-link-button:disabled { opacity: 0.55; cursor: wait; text-decoration: none; }
+
+@media (max-width: 1180px) {
+  .repository-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .repository-control-actions { grid-column: 1 / -1; justify-content: flex-start; }
+}
+
+@media (max-width: 620px) {
+  .repository-card { padding: 11px; }
+  .repository-controls { grid-template-columns: 1fr; }
+  .repository-control-actions { flex-wrap: wrap; }
+  .repository-control-actions .instrument-button { flex: 1 1 auto; }
+}

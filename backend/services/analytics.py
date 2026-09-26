@@ -21,6 +21,7 @@ def _item(s: TestSession, rep: Optional[Report]) -> dict:
     return {"session_id": s.id, "report_no": rep.report_no if rep else None, "instrument_id": i.id,
             "model": i.model, "serial_no": i.serial_no, "manufacturer": i.manufacturer.name,
             "accuracy_class": i.accuracy_class, "verdict": s.verdict_overall, "status": s.status,
+            "ruleset_version": rep.ruleset_version if rep else s.ruleset_version,
             "tested_at": iso(s.tested_at), "approved_at": iso(rep.approved_at) if rep else None,
             "approved_by": rep.approved_by.full_name if rep else None,
             "marginal_results": s.marginal_results, "rounding_traps": s.rounding_traps}
