@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="{{ lang }}">
+<head>
+<meta charset="utf-8">
+<style>
+  @page { size: A4; margin: 22mm 16mm 20mm 16mm;
+    @bottom-center { content: "ScaleSaathi — " counter(page) " / " counter(pages); font-size: 8px; color: #888; } }
+  * { box-sizing: border-box; }
+  body { font-family: "DejaVu Sans", "Noto Sans", Arial, sans-serif; font-size: 10.5px; color: #1a1a1a; }
+  h1 { font-size: 17px; margin: 0 0 2px 0; }
+  h2 { font-size: 12.5px; margin: 14px 0 6px 0; padding-bottom: 3px; border-bottom: 1.5px solid #1a1a1a; }
+  .muted { color: #666; }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 3px solid #0b3d91; padding-bottom: 8px; margin-bottom: 10px; }
+  .header .lab-name { font-weight: bold; font-size: 13px; }
+  .header .meta { text-align: right; font-size: 9.5px; }
+  table { width: 100%; border-collapse: collapse; margin-bottom: 6px; }
+  td, th { padding: 3px 6px; font-size: 9.7px; vertical-align: top; }
+  .kv td:first-child { color: #555; width: 34%; }
+  .grid2 { display: flex; gap: 18px; }
+  .grid2 > div { flex: 1; }
+  .box { border: 1px solid #d8d8d8; border-radius: 4px; padding: 8px 10px; }
+  table.results { border: 1px solid #d8d8d8; }
+  table.results th { background: #0b3d91; color: #fff; text-align: left; font-size: 9.3px; }
+  table.results td { border-bottom: 1px solid #eee; }
+  table.results tr:nth-child(even) td { background: #fafafa; }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 10px; color: #fff; font-weight: bold; font-size: 9px; }
+  .trap-row td { background: #fff4e5 !important; }
+  .callout { border-radius: 5px; padding: 8px 12px; margin: 8px 0; font-size: 9.7px; }
+  .callout.warn { background: #fff4e5; border: 1px solid #f0b429; }
+  .callout.trap { background: #fdecea; border: 1px solid #f5989d; }
+  .verdict-banner { text-align: center; padding: 10px; border-radius: 6px; color: #fff; font-size: 16px;
+    font-weight: bold; letter-spacing: 1px; margin: 14px 0; }
+  .footer-block { display: flex; justify-content: space-between; align-items: flex-end; margin-top: 22px; }
+  .sig-box { text-align: center; width: 200px; }
+  .sig-box img { max-height: 46px; }
+  .sig-line { border-top: 1px solid #333; margin-top: 34px; padding-top: 3px; font-size: 9px; }
+  .qr-box { text-align: center; width: 130px; }
+  .qr-box img { width: 96px; height: 96px; }
+  .photos { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 4px; }
+  .photos figure { width: 30%; margin: 0; }
+  .photos img { width: 100%; border: 1px solid #ddd; border-radius: 3px; }
+  .photos figcaption { font-size: 8px; color: #666; text-align: center; }
+  .small-muted { font-size: 8.5px; color: #888; margin-top: 14px; }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div>
+      {% if lab and lab.logo_data_uri %}<img src="{{ lab.logo_data_uri }}" style="max-height:38px;margin-bottom:4px;"><br>{% endif %}
+      <div class="lab-name">{{ lab.name if lab else "ScaleSaathi Testing Laboratory" }}</div>
+      <div class="muted">{{ lab.address if lab else "" }}</div>
+      {% if lab and lab.accreditation_no %}<div class="muted">{{ L.accreditation_no }}: {{ lab.accreditation_no }}</div>{% endif %}
+    </div>
+    <div class="meta">
+      <div><strong>{{ L.report_no }}:</strong> {{ report.report_no or "-" }}</div>
+      <div><strong>{{ L.date }}:</strong> {{ report.approved_at or "-" }}</div>
+      <div class="muted">{{ L.ruleset_version }}: {{ report.ruleset_version or "-" }}</div>
+    </div>
+  </div>
+
+  <h1>{{ L.doc_title }}</h1>
+
+  <div class="grid2">
+    <div class="box">
+      <h2 style="margin-top:4px">{{ L.instrument_details }}</h2>
+      <table class="kv">
+        <tr><td>{{ L.manufacturer }}</td><td>{{ manufacturer.name }}</td></tr>
+        <tr><td>{{ L.model }}</td><td>{{ instrument.model }}</td></tr>
+        <tr><td>{{ L.serial_no }}</td><td>{{ instrument.serial_no }}</td></tr>
+        <tr><td>{{ L.accuracy_class }}</td><td>{{ instrument.accuracy_class }}</td></tr>
+        <tr><td>{{ L.max_capacity }}</td><td>{{ instrument.max_capacity }} g</td></tr>
+        <tr><td>{{ L.min_capacity }}</td><td>{{ instrument.min_capacity }} g</td></tr>
+        <tr><td>{{ L.scale_interval }}</td><td>{{ instrument.e }} g</td></tr>
+        <tr><td>{{ L.verification_interval }}</td><td>{{ instrument.d }} g</td></tr>
+        <tr><td>{{ L.max_tare }}</td><td>{{ instrument.max_tare }} g</td></tr>
+      </table>
+    </div>
+    <div class="box">
+      <h2 style="margin-top:4px">{{ L.test_conditions }}</h2>
+      <table class="kv">
+        <tr><td>{{ L.location }}</td><td>{{ session.location or "-" }}</td></tr>
+        <tr><td>{{ L.tested_on }}</td><td>{{ session.tested_at }}</td></tr>
+        <tr><td>{{ L.tested_by }}</td><td>{{ tester.full_name if tester else "-" }}</td></tr>
+        <tr><td>{{ L.temperature }}</td><td>{{ session.conditions.temperature_c }} °C</td></tr>
+        <tr><td>{{ L.humidity }}</td><td>{{ session.conditions.humidity_pct }} %RH</td></tr>
+        <tr><td>{{ L.pressure }}</td><td>{{ session.conditions.pressure_hpa }} hPa</td></tr>
+      </table>
+    </div>
+  </div>
+
+  {% if trap_rows %}
+  <div class="callout trap">
+    <strong>&#9888; {{ L.rounding_trap_title }}.</strong> {{ L.rounding_trap_body }}
+  </div>
+  {% endif %}
+  {% if marginal_rows %}
+  <div class="callout warn">
+    <strong>{{ L.marginal_title }}.</strong> {{ L.marginal_body }}
+  </div>
+  {% endif %}
+
+  <h2>{{ L.results }}</h2>
+  <table class="results">
+    <thead>
+      <tr>
+        <th>{{ L.test }}</th><th>{{ L.load }}</th><th>{{ L.error }}</th><th>{{ L.mpe }}</th>
+        <th>{{ L.utilisation }}</th><th>{{ L.naive_method }}</th><th>{{ L.result }}</th>
+        <th>{{ L.clause }}</th><th>{{ L.explanation }}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for r in results %}
+      <tr class="{{ 'trap-row' if r.is_rounding_trap else '' }}">
+        <td>{{ r.test }}{% if r.marginal %} &#9888;{% endif %}</td>
+        <td>{{ r.load if r.load is not none else "-" }}</td>
+        <td>{{ r.error if r.error is not none else "-" }}</td>
+        <td>{{ r.mpe if r.mpe is not none else "-" }}</td>
+        <td>{{ "%.0f"|format(r.utilisation * 100) if r.utilisation is not none else "-" }}%</td>
+        <td>{% if r.naive_result %}{{ r.naive_error }} → <strong>{{ r.naive_result }}</strong>{% else %}-{% endif %}</td>
+        <td><span class="badge" style="background:{{ r.colour }}">{{ r.result }}</span></td>
+        <td class="muted">{{ r.clause or "-" }}</td>
+        <td class="muted">{{ r.explanation or "-" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="verdict-banner" style="background:{{ overall_colour }}">
+    {{ L.overall_verdict }}: {{ overall }}
+  </div>
+
+  {% if attachments %}
+  <h2>{{ L.attachments }}</h2>
+  <div class="photos">
+    {% for a in attachments %}
+    <figure><img src="{{ a.data_uri }}"><figcaption>{{ a.caption or a.filename }}</figcaption></figure>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {% if annexes %}
+  <h2>{{ L.annexes }}</h2>
+  <ul>{% for a in annexes %}<li>{{ a.filename }} ({{ a.kind }})</li>{% endfor %}</ul>
+  {% endif %}
+
+  <div class="footer-block">
+    <div class="sig-box">
+      {% if approved_by and approved_by.signature_data_uri %}<img src="{{ approved_by.signature_data_uri }}"><br>{% endif %}
+      <div class="sig-line">
+        {{ approved_by.full_name if approved_by else "-" }}<br>
+        <span class="muted">{{ approved_by.designation if approved_by and approved_by.designation else "" }}</span><br>
+        <span class="muted">{{ L.approved_on }}: {{ report.approved_at or "-" }}</span>
+      </div>
+    </div>
+    {% if qr_data_uri %}
+    <div class="qr-box">
+      <img src="{{ qr_data_uri }}"><br>
+      <span class="muted">{{ L.verify_link }}</span>
+    </div>
+    {% endif %}
+  </div>
+
+  <div class="small-muted">
+    {{ L.verify_note }} {{ verify_url or "" }}<br>{{ L.footer }}
+  </div>
+
+</body>
+</html>
