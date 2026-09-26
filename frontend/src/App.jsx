@@ -49,6 +49,7 @@ export default function App() {
         <Route path="review" element={<RequireRole roles={["Reviewer", "Admin"]}><Review /></RequireRole>} />
         <Route path="review/:sessionId" element={<RequireRole roles={["Reviewer", "Admin"]}><ReviewSession /></RequireRole>} />
         <Route path="reports" element={<Reports />} />
+        <Route path="reports/:sessionId" element={<Reports />} />
         <Route path="repository" element={<Repository />} />
         <Route path="history" element={<History />} />
         <Route path="rulesets" element={<RequireRole roles={["Admin"]}><Rulesets /></RequireRole>} />

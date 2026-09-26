@@ -1,0 +1,48 @@
+.reports-page { color: #342e23; }
+.reports-card { padding: 15px; }
+
+.reports-search { display: flex; align-items: center; gap: 8px; margin: 0 0 13px; }
+.reports-search__field { flex: 1 1 auto; min-height: 38px; }
+
+.reports-action-error { margin-bottom: 10px; }
+.reports-table { min-width: 760px; }
+.reports-table td strong, .reports-table td small { display: block; font-weight: 400; }
+.reports-table td strong { color: #514a3d; }
+.reports-table td small { margin-top: 3px; color: #817865; font-size: 0.65rem; }
+.reports-row-actions { display: flex; gap: 10px; }
+.reports-row-actions .instrument-link-button:disabled { opacity: 0.55; cursor: wait; text-decoration: none; }
+
+/* ---------- detail ---------- */
+.reports-detail { display: grid; gap: 14px; }
+
+.reports-info-card h2 { margin: 0 0 12px; }
+
+.reports-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px 18px;
+  margin: 0;
+}
+.reports-info-grid > div { display: grid; gap: 4px; min-width: 0; }
+.reports-info-grid dt { color: #817865; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; }
+.reports-info-grid dd { margin: 0; color: #3d362b; font-size: 0.92rem; word-break: break-word; }
+.reports-info-grid dd small { display: block; margin-top: 2px; color: #817865; font-size: 0.68rem; }
+
+.reports-hash { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.76rem; }
+
+.reports-warnings { margin: 12px 0 0; padding: 10px 12px 10px 28px; border: 1px solid #eee7d5; background: #fbf7e9; color: #6b6251; font-size: 0.76rem; }
+.reports-warnings li + li { margin-top: 4px; }
+
+.reports-detail-actions { flex-wrap: wrap; }
+
+@media (max-width: 620px) {
+  .reports-card { padding: 11px; }
+  .reports-search { flex-wrap: wrap; }
+  .reports-info-grid { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 420px) {
+  .reports-info-grid { grid-template-columns: 1fr; }
+  .reports-detail-actions { flex-direction: column; align-items: stretch; }
+  .reports-detail-actions .workflow-actions__spacer { display: none; }
+}
