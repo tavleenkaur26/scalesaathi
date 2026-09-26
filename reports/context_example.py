@@ -35,13 +35,19 @@ EXAMPLE_CONTEXT = {
          "utilisation": 1.2, "marginal": False, "clause": "R76-1 3.6.1",
          "explanation": "Error of -3.0 g exceeds MPE of ±2.5 g for loads between 500e and 2000e.",
          "naive": {"error": 2.0, "result": "PASS"}},
-        {"test": "eccentricity", "load": 2500, "e": 1, "error": 1.0, "mpe": 5.0, "result": "PASS",
-         "utilisation": 0.2, "marginal": False, "clause": "R76-1 3.6.2",
+        {"test": "eccentricity", "label": "Segment 3", "load": 2500, "e": 1, "error": 1.0, "mpe": 5.0,
+         "result": "PASS", "utilisation": 0.2, "marginal": False, "clause": "R76-1 3.6.2",
          "explanation": "Corner-load error within MPE.", "naive": {"error": 1.0, "result": "PASS"}},
         {"test": "repeatability", "load": 5000, "e": 1, "error": 2.1, "mpe": 2.5, "result": "PASS",
          "utilisation": 0.84, "marginal": True, "clause": "R76-1 3.6.3",
          "explanation": "Spread of repeat readings uses 84% of MPE (marginal).",
          "naive": {"error": 2.1, "result": "PASS"}},
+        {"test": "temperature", "label": "40 °C", "load": 1000, "e": 1, "error": 0.5, "mpe": 2.5,
+         "result": "PASS", "utilisation": 0.2, "marginal": False, "clause": "R76-1 A.5.3.1",
+         "explanation": "Error within MPE at 40 °C.", "naive": {"error": 0.5, "result": "PASS"}},
+        {"test": "zero_setting", "load": 0, "e": 1, "error": 0.3, "mpe": 1.25, "result": "PASS",
+         "utilisation": 0.24, "marginal": False, "clause": "R76-1 4.5.2",
+         "explanation": "Error after setting within limit.", "naive": None},
     ],
     "observations": {},
     "attachments": [],
@@ -50,17 +56,21 @@ EXAMPLE_CONTEXT = {
 
 
 if __name__ == "__main__":
+    # Deliberately NOT named sample_report.* — this is fabricated fixture data
+    # (fake lab, fake accreditation no., fake clause numbers). Never use these
+    # files in the PPT, video, or README as if they were a real report; use
+    # a report generated from an actual approved session instead.
     from . import generate_docx, generate_pdf, render_verify_page
 
-    with open("sample_report.pdf", "wb") as f:
+    with open("fixture_report.pdf", "wb") as f:
         f.write(generate_pdf(EXAMPLE_CONTEXT))
-    with open("sample_report.docx", "wb") as f:
+    with open("fixture_report.docx", "wb") as f:
         f.write(generate_docx(EXAMPLE_CONTEXT))
-    with open("sample_verify.html", "w") as f:
+    with open("fixture_verify.html", "w") as f:
         f.write(render_verify_page({
             "status": "genuine", "report_no": "SS-2026-0007", "instrument_model": "AX-500",
             "serial_no": "AX500-2291", "manufacturer": "Accura Scales Pvt. Ltd.",
             "accuracy_class": "III", "verdict": "FAIL", "approved_by": "Dr. Anita Rao",
             "approved_at": "2026-09-26 14:32", "lab_name": "National Weights & Measures Lab, Delhi",
         }))
-    print("Wrote sample_report.pdf, sample_report.docx, sample_verify.html")
+    print("Wrote fixture_report.pdf, fixture_report.docx, fixture_verify.html (fabricated data, not for the demo)")

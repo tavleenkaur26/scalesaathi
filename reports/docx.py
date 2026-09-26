@@ -78,8 +78,8 @@ def generate_docx(context: dict) -> bytes:
         (L["accuracy_class"], v["instrument"]["accuracy_class"]),
         (L["max_capacity"], f"{v['instrument']['max_capacity']} g"),
         (L["min_capacity"], f"{v['instrument']['min_capacity']} g"),
-        (L["scale_interval"], f"{v['instrument']['e']} g"),
-        (L["verification_interval"], f"{v['instrument']['d']} g"),
+        (L["e_interval"], f"{v['instrument']['e']} g"),
+        (L["d_interval"], f"{v['instrument']['d']} g"),
         (L["max_tare"], f"{v['instrument']['max_tare']} g"),
     ])
 
@@ -108,7 +108,7 @@ def generate_docx(context: dict) -> bytes:
 
     # -- results table -----------------------------------------------------
     _heading(doc, L["results"])
-    cols = [L["test"], L["load"], L["error"], L["mpe"], L["utilisation"],
+    cols = [L["test"], L["test_detail"], L["load"], L["error"], L["mpe"], L["utilisation"],
             L["naive_method"], L["result"], L["clause"], L["explanation"]]
     t = doc.add_table(rows=1, cols=len(cols))
     t.style = "Light Grid Accent 1"
@@ -119,12 +119,12 @@ def generate_docx(context: dict) -> bytes:
         cells = t.add_row().cells
         util = "-" if r["utilisation"] is None else f"{r['utilisation'] * 100:.0f}%"
         naive = "-" if not r["naive_result"] else f"{r['naive_error']} \u2192 {r['naive_result']}"
-        values = [r["test"] + (" \u26a0" if r["marginal"] else ""),
+        values = [r["test_name"] + (" \u26a0" if r["marginal"] else ""), r["label"] or "-",
                   r["load"], r["error"], r["mpe"], util, naive, r["result"],
                   r["clause"] or "-", r["explanation"] or "-"]
         for i, val in enumerate(values):
             cells[i].text = "-" if val is None else str(val)
-            if i == 6:  # result column
+            if i == 7:  # result column
                 cells[i].paragraphs[0].runs[0].font.color.rgb = _colour(r["colour"])
                 cells[i].paragraphs[0].runs[0].bold = True
         if r["is_rounding_trap"]:

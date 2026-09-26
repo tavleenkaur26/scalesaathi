@@ -18,8 +18,8 @@ LABELS = {
         "serial_no": "Serial No.",
         "max_capacity": "Max Capacity",
         "min_capacity": "Min Capacity",
-        "scale_interval": "Scale Interval (e)",
-        "verification_interval": "Verification Scale Interval (d)",
+        "e_interval": "Verification Scale Interval (e)",
+        "d_interval": "Actual Scale Interval (d)",
         "accuracy_class": "Accuracy Class",
         "max_tare": "Max Tare",
         "support_points": "Support Points",
@@ -33,6 +33,7 @@ LABELS = {
         "ruleset_version": "Ruleset Version",
         "results": "Test Results",
         "test": "Test",
+        "test_detail": "Detail",
         "load": "Load (g)",
         "error": "Error (g)",
         "mpe": "MPE (±g)",
@@ -84,8 +85,8 @@ LABELS = {
         "serial_no": "सीरियल नंबर",
         "max_capacity": "अधिकतम क्षमता",
         "min_capacity": "न्यूनतम क्षमता",
-        "scale_interval": "स्केल अंतराल (e)",
-        "verification_interval": "सत्यापन स्केल अंतराल (d)",
+        "e_interval": "सत्यापन स्केल अंतराल (e)",
+        "d_interval": "वास्तविक स्केल अंतराल (d)",
         "accuracy_class": "यथार्थता वर्ग",
         "max_tare": "अधिकतम टेयर",
         "support_points": "आधार बिंदु",
@@ -99,6 +100,7 @@ LABELS = {
         "ruleset_version": "नियम संस्करण",
         "results": "परीक्षण परिणाम",
         "test": "परीक्षण",
+        "test_detail": "विवरण",
         "load": "भार (g)",
         "error": "त्रुटि (g)",
         "mpe": "MPE (±g)",
@@ -142,3 +144,35 @@ LABELS = {
 
 def labels(lang: str) -> dict:
     return LABELS.get(lang, LABELS["en"])
+
+
+# Readable names for engine.schemas.TestName. Anything not listed here falls
+# back to a title-cased version of the raw key (see common.test_display_name).
+TEST_NAMES = {
+    "en": {
+        "weighing": "Weighing accuracy",
+        "eccentricity": "Eccentricity (corner load)",
+        "repeatability": "Repeatability",
+        "discrimination": "Discrimination (sensitivity)",
+        "zero_setting": "Zero-setting accuracy",
+        "tare_setting": "Tare-setting accuracy",
+        "temperature": "Temperature effect on weighing",
+        "temperature_zero_drift": "Temperature effect on zero",
+        "disturbance": "Disturbance (EMC / power) test",
+    },
+    "hi": {
+        "weighing": "भार-मापन यथार्थता",
+        "eccentricity": "विकेंद्रता (कोना भार)",
+        "repeatability": "पुनरावृत्ति क्षमता",
+        "discrimination": "विभेदन (संवेदनशीलता)",
+        "zero_setting": "शून्य-सेटिंग यथार्थता",
+        "tare_setting": "टेयर-सेटिंग यथार्थता",
+        "temperature": "भार-मापन पर तापमान प्रभाव",
+        "temperature_zero_drift": "शून्य पर तापमान प्रभाव",
+        "disturbance": "विक्षोभ (EMC / पावर) परीक्षण",
+    },
+}
+
+
+def test_names(lang: str) -> dict:
+    return TEST_NAMES.get(lang, TEST_NAMES["en"])

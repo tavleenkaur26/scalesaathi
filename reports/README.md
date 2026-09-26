@@ -60,8 +60,14 @@ etc. tags matching `build_view()`'s keys, then replace the body of
 ```bash
 cd <repo root>
 python -m reports.context_example
-# writes sample_report.pdf, sample_report.docx, sample_verify.html
+# writes fixture_report.pdf, fixture_report.docx, fixture_verify.html
 ```
+
+**These fixture files use fabricated data (fake lab name, fake accreditation
+number, fake clause numbers) — they're for checking the layout only. Never
+put them in the PPT, the demo video, or the README as if they were a real
+report.** For anything shown to a judge, generate a report from an actual
+approved session through the real API (see below) and use that file instead.
 
 ## Testing through the real API
 

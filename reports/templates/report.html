@@ -71,8 +71,8 @@
         <tr><td>{{ L.accuracy_class }}</td><td>{{ instrument.accuracy_class }}</td></tr>
         <tr><td>{{ L.max_capacity }}</td><td>{{ instrument.max_capacity }} g</td></tr>
         <tr><td>{{ L.min_capacity }}</td><td>{{ instrument.min_capacity }} g</td></tr>
-        <tr><td>{{ L.scale_interval }}</td><td>{{ instrument.e }} g</td></tr>
-        <tr><td>{{ L.verification_interval }}</td><td>{{ instrument.d }} g</td></tr>
+        <tr><td>{{ L.e_interval }}</td><td>{{ instrument.e }} g</td></tr>
+        <tr><td>{{ L.d_interval }}</td><td>{{ instrument.d }} g</td></tr>
         <tr><td>{{ L.max_tare }}</td><td>{{ instrument.max_tare }} g</td></tr>
       </table>
     </div>
@@ -104,7 +104,7 @@
   <table class="results">
     <thead>
       <tr>
-        <th>{{ L.test }}</th><th>{{ L.load }}</th><th>{{ L.error }}</th><th>{{ L.mpe }}</th>
+        <th>{{ L.test }}</th><th>{{ L.test_detail }}</th><th>{{ L.load }}</th><th>{{ L.error }}</th><th>{{ L.mpe }}</th>
         <th>{{ L.utilisation }}</th><th>{{ L.naive_method }}</th><th>{{ L.result }}</th>
         <th>{{ L.clause }}</th><th>{{ L.explanation }}</th>
       </tr>
@@ -112,7 +112,8 @@
     <tbody>
       {% for r in results %}
       <tr class="{{ 'trap-row' if r.is_rounding_trap else '' }}">
-        <td>{{ r.test }}{% if r.marginal %} &#9888;{% endif %}</td>
+        <td>{{ r.test_name }}{% if r.marginal %} &#9888;{% endif %}</td>
+        <td class="muted">{{ r.label or "-" }}</td>
         <td>{{ r.load if r.load is not none else "-" }}</td>
         <td>{{ r.error if r.error is not none else "-" }}</td>
         <td>{{ r.mpe if r.mpe is not none else "-" }}</td>

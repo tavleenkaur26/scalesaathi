@@ -9,6 +9,7 @@ is the dict returned by backend.services.reporting.verify(db, hash):
 """
 import html as _html
 
+from .common import format_dt
 from .i18n import labels
 
 _ROW_KEYS = [
@@ -39,6 +40,8 @@ def render_verify_page(data: dict, lang: str = "en") -> str:
         for label_key, field in _ROW_KEYS:
             if field is None:
                 val = f"{data.get('manufacturer', '-')} {data.get('instrument_model', '-')}"
+            elif field == "approved_at":
+                val = format_dt(data.get(field))
             else:
                 val = data.get(field)
             rows.append((L[label_key], val))
