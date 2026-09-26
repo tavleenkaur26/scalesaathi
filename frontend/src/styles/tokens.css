@@ -1,0 +1,49 @@
+:root {
+  /* --- Palette (exact brief values) --- */
+  --eucalyptus: #cdd4b1;
+  --pistachio: #ebeccc;
+  --ivory: #fff9e2;
+  --peach: #feecd0;
+  --clay: #dca278;
+
+  /* Derived neutrals, kept warm rather than true grey/black */
+  --ink: #23201a;
+  --ink-soft: #6b6656;
+  --ink-faint: #a39d87;
+  --clay-deep: #b97e53;
+  --hairline: #ddd6bc;
+  --surface: var(--ivory);
+  --surface-raised: #fffdf4;
+
+  /* --- Type --- */
+  --font-display: "Playfair Display", "Times New Roman", serif;
+  --font-body: "Alice", "Iowan Old Style", serif;
+
+  --step-eyebrow: 0.8125rem;
+  --step-body: 1.0625rem;
+  --step-lead: 1.1875rem;
+  --step-h1: clamp(2.75rem, 3.1rem + 1.6vw, 5rem);
+  --step-label: 1rem;
+
+  /* --- Layout --- */
+  --page-max: 1280px;
+  --page-pad: clamp(1.25rem, 1rem + 3vw, 4.5rem);
+  --radius-sm: 4px;
+  --radius-md: 10px;
+  --radius-pill: 999px;
+
+  /* --- Shadow (restrained) --- */
+  --shadow-soft: 0 1px 2px rgba(35, 32, 26, 0.05), 0 8px 24px -12px rgba(35, 32, 26, 0.18);
+  --shadow-button: 0 6px 16px -8px rgba(185, 126, 83, 0.55);
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (prefers-color-scheme: dark) {
+  /* The brand is an editorial paper aesthetic; keep the paper surface
+     even when the OS prefers dark, but this token exists so a future
+     explicit dark theme has a single place to override. */
+  :root {
+    --surface: var(--ivory);
+  }
+}

@@ -86,6 +86,7 @@ def instrument_summary(i) -> dict:
 
 def session_summary(s: TestSession) -> dict:
     return {"id": s.id, "status": s.status, "instrument_id": s.instrument_id,
+            "tester_id": s.tester_id,
             "model": s.instrument.model, "serial_no": s.instrument.serial_no,
             "manufacturer": s.instrument.manufacturer.name, "tester": s.tester.full_name,
             "tested_at": iso(s.tested_at), "verdict": s.verdict_overall,

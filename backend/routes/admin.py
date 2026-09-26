@@ -6,9 +6,10 @@ from sqlalchemy.orm import Session
 from backend.auth import get_current_user, require_role
 from backend.constants import ADMIN, REVIEWER, TESTER
 from backend.db import get_db
-from backend.models import RulesetVersion, TestSession, User
+from backend.models import Manufacturer, RulesetVersion, TestSession, User
 from backend.services import engine_adapter as ea, seed, sessions as svc
 from backend.services.sessions import iso
+from engine.seed_loader import load_seeds
 
 router = APIRouter(tags=["rulesets & demo"])
 
@@ -65,6 +66,25 @@ def ruleset_impact(version: str, db: Session = Depends(get_db),
             except HTTPException:
                 continue
     return ea.impact(sessions, old_rs, new_rs)
+
+
+@router.get("/demo/sample-instrument")
+def sample_instrument(db: Session = Depends(get_db), user: User = Depends(require_role(TESTER, ADMIN))):
+    """Return the existing rounding-trap sample as form data without changing demo state."""
+    sample = next(item for item in load_seeds() if item["id"] == "03_rounding_trap")
+    meta = sample["meta"]
+    spec = sample["session"].spec.model_dump()
+    manufacturer = db.query(Manufacturer).filter_by(name=meta["manufacturer"]).first()
+    return {
+        "manufacturer_id": manufacturer.id if manufacturer else None,
+        "manufacturer_name": meta["manufacturer"],
+        "model": meta["model"],
+        "serial_no": f"SN-{sample['id'][:2]}-001",
+        "max_capacity": spec["max_capacity"],
+        "min_capacity": spec["min_capacity"],
+        "e": spec["e"],
+        "accuracy_class": spec["accuracy_class"],
+    }
 
 
 @router.post("/demo/load-sample")

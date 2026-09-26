@@ -1,0 +1,86 @@
+.balance-illustration {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.balance-illustration__display {
+  font-family: var(--font-body);
+  font-size: 23px;
+  fill: var(--pistachio);
+  letter-spacing: 0.04em;
+}
+
+.balance-illustration__weight-label {
+  font-family: var(--font-body);
+  font-size: 12px;
+  fill: var(--ivory);
+}
+
+.corner-scale {
+  width: 100%;
+  height: auto;
+}
+
+.corner-scale__display {
+  font-family: var(--font-body);
+  font-size: 13px;
+  fill: var(--pistachio);
+  letter-spacing: 0.03em;
+}
+
+.precision-caption {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-family: var(--font-body);
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--ink-faint);
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* One quiet, orchestrated moment of motion — not scattered per-element effects. */
+.balance-illustration__field {
+  animation: drift 15s var(--ease) infinite;
+  transform-origin: center;
+}
+
+.balance-illustration__field--a {
+  animation-delay: 0s;
+}
+
+.balance-illustration__field--b {
+  animation-delay: -7s;
+}
+
+.balance-illustration__field--c {
+  animation-delay: -3.5s;
+  animation-duration: 11s;
+}
+
+.balance-illustration__botanical--front {
+  animation: sway 9s ease-in-out infinite;
+  transform-origin: 100px 606px;
+}
+
+@keyframes drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -12px, 0) scale(1.02);
+  }
+}
+
+@keyframes sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(-1.4deg);
+  }
+}

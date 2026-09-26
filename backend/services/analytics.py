@@ -78,10 +78,19 @@ def instrument_history(db: Session, instrument_id: int) -> list[dict]:
 def dashboard_stats(db: Session) -> dict:
     def count(statuses):
         return db.query(TestSession).filter(TestSession.status.in_(statuses)).count()
+    review_count = count(IN_REVIEW)
+    approved_pass = (db.query(TestSession).filter(TestSession.status == APPROVED,
+                                                  TestSession.verdict_overall == "PASS").count())
+    approved_fail = (db.query(TestSession).filter(TestSession.status == APPROVED,
+                                                  TestSession.verdict_overall == "FAIL").count())
     events = (db.query(AuditLog).filter(AuditLog.description.isnot(None))
               .order_by(AuditLog.at.desc(), AuditLog.id.desc()).limit(10).all())
     return {"completed": count([APPROVED]), "in_progress": count(IN_PROGRESS),
-            "under_review": count(IN_REVIEW), "total": db.query(TestSession).count(),
+            "under_review": review_count, "total": db.query(TestSession).count(),
+            "instruments": db.query(Instrument).count(),
+            "failed_tests": db.query(TestSession).filter(TestSession.verdict_overall == "FAIL").count(),
+            "result_distribution": {"pass": approved_pass, "fail": approved_fail,
+                                    "under_review": review_count},
             "recent_activity": [{"at": iso(e.at), "user": e.user_name, "action": e.action,
                                  "entity": e.entity, "description": e.description} for e in events]}
 

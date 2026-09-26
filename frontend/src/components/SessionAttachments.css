@@ -1,0 +1,64 @@
+.session-attachments {
+  --attachment-ink: #514332;
+  --attachment-muted: #827765;
+  --attachment-line: #e7dfcd;
+  margin: 18px 0 12px;
+  padding: 16px;
+  border: 1px solid var(--attachment-line);
+  border-radius: 8px;
+  background: linear-gradient(135deg, #fffdf5, #fffcef 72%, #fff9e2);
+  color: var(--attachment-ink);
+}
+.session-attachments__heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 14px; }
+.session-attachments__heading h2 { margin: 2px 0 4px; color: #493622; font: 400 1.35rem/1.15 var(--font-display); }
+.session-attachments__heading p:not(.instrument-eyebrow) { margin: 0; color: var(--attachment-muted); font-size: .78rem; }
+.session-attachments__heading > span { flex: none; padding: 5px 9px; border: 1px solid var(--attachment-line); border-radius: 4px; color: var(--attachment-muted); background: #fffdf4; font-size: .68rem; }
+.session-attachments__upload-controls { display: grid; grid-template-columns: minmax(150px, 190px) minmax(0, 1fr); align-items: end; gap: 12px; }
+.session-attachments__kind { display: grid; gap: 5px; color: #73654f; font-size: .7rem; }
+.session-attachments__kind select { width: 100%; min-height: 38px; padding: 7px 9px; border: 1px solid #ded4bf; border-radius: 4px; background: #fffef8; color: #514332; font: inherit; }
+.session-attachments__drop { display: flex; min-height: 70px; flex-wrap: wrap; align-items: center; gap: 3px 8px; padding: 10px 12px; border: 1px dashed #b9a889; border-radius: 5px; background: rgba(255,255,247,.82); color: #65543c; font-size: .76rem; transition: background-color .15s, border-color .15s; }
+.session-attachments__drop.is-dragging { border-color: #735530; background: #f5efd9; }
+.session-attachments__upload-mark { display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid #d5c5a7; border-radius: 50%; color: #735530; font-size: 1.1rem; }
+.session-attachments__drop button { padding: 0; border: 0; background: none; color: #735530; font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
+.session-attachments__drop button:disabled { opacity: .55; cursor: wait; }
+.session-attachments__drop small { flex-basis: 100%; padding-left: 35px; color: #8a806d; font-size: .64rem; line-height: 1.45; }
+.session-attachments__notice { margin: 9px 0 0; color: #65704b; font-size: .7rem; }
+.session-attachments__empty,.session-attachments__state { display: grid; gap: 4px; padding: 13px 12px; border: 1px solid #eee8da; border-radius: 4px; background: rgba(255,255,247,.65); }
+.session-attachments__empty strong { color: #514332; font: 400 1rem var(--font-display); }
+.session-attachments__empty p,.session-attachments__empty small { margin: 0; color: var(--attachment-muted); font-size: .7rem; }
+.session-attachments__state { display: flex; align-items: center; gap: 8px; color: var(--attachment-muted); font-size: .72rem; }
+.session-attachments__list { display: grid; gap: 7px; margin: 10px 0 0; padding: 0; list-style: none; }
+.session-attachment { display: grid; grid-template-columns: 35px minmax(0,1fr) auto auto; align-items: center; gap: 9px; padding: 9px 10px; border: 1px solid #e9e2d3; border-radius: 4px; background: #fffff7; }
+.session-attachment__icon { display: grid; width: 32px; height: 34px; place-items: center; border: 1px solid #e5dbc7; border-radius: 3px; background: #fbf5e6; color: #735530; font-size: .57rem; font-weight: 700; }
+.session-attachment__main { display: grid; min-width: 0; gap: 2px; }
+.session-attachment__main strong { overflow: hidden; color: #514332; font-size: .75rem; font-weight: 600; text-overflow: ellipsis; white-space: nowrap; }
+.session-attachment__main small,.session-attachment__status { color: #817765; font-size: .64rem; }
+.session-attachment__uploaded { color: #958b78 !important; }
+.session-attachment__status { display: flex; align-items: center; gap: 5px; white-space: nowrap; }
+.session-attachment--failed { border-color: #e5c9b9; background: #fff9f2; }
+.session-attachment--failed .session-attachment__status,.session-attachment__error { color: #985b3c !important; }
+.session-attachment__actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 5px; }
+.session-attachments__action,.session-attachments__retry,.session-attachments__remove,.session-attachment__confirm button { min-height: 29px; padding: 5px 9px; border: 1px solid #d9cbb1; border-radius: 3px; background: #fffdf5; color: #735530; font: inherit; font-size: .66rem; cursor: pointer; }
+.session-attachments__action:hover,.session-attachments__retry:hover,.session-attachment__confirm button:hover { background: #f5efdf; }
+.session-attachments__remove,.session-attachments__dismiss { border-color: transparent; background: transparent; color: #8a6d56; }
+.session-attachments__dismiss { border: 0; color: #8a6d56; font-size: 1rem; cursor: pointer; }
+.session-attachment__confirm { grid-column: 2/-1; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding-top: 7px; border-top: 1px solid #eee6d8; color: #665741; font-size: .68rem; }
+.session-attachment__confirm p { flex-basis: 100%; margin: 0; }
+.session-attachment__preview-state { display: flex; align-items: center; gap: 7px; grid-column: 2/-1; margin: 4px 0; color: var(--attachment-muted); font-size: .68rem; }
+.session-attachment__preview,.session-attachment__pdf { grid-column: 2/-1; display: block; width: 100%; max-height: 420px; border: 1px solid #e5dece; border-radius: 3px; background: #fff; object-fit: contain; }
+.session-attachment__pdf { height: min(62vh, 520px); }
+.session-attachments .instrument-spinner { width: 13px; height: 13px; }
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+@media (max-width: 700px) {
+  .session-attachments { padding: 12px; }
+  .session-attachments__upload-controls { grid-template-columns: 1fr; }
+  .session-attachment { grid-template-columns: 32px minmax(0,1fr) auto; gap: 8px; }
+  .session-attachment__status { grid-column: 2; grid-row: 2; }
+  .session-attachment__actions { grid-column: 3; grid-row: 1 / span 2; }
+  .session-attachment__confirm,.session-attachment__preview-state,.session-attachment__preview,.session-attachment__pdf { grid-column: 1/-1; }
+}
+@media (max-width: 430px) {
+  .session-attachments__heading { flex-direction: column; }
+  .session-attachment { grid-template-columns: 30px minmax(0,1fr); }
+  .session-attachment__status,.session-attachment__actions { grid-column: 2; grid-row: auto; justify-content: flex-start; }
+}

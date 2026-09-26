@@ -1,0 +1,16 @@
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  letter-spacing: 0.03em;
+  color: var(--color-ink-soft);
+}
+
+.section-label--accent {
+  color: var(--color-accent-strong);
+}
+
+.section-label--muted {
+  color: var(--color-ink-faint);
+}
