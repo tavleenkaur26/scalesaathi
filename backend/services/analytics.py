@@ -6,7 +6,7 @@ import io
 from datetime import datetime
 from typing import Optional
 
-from sqlalchemy import or_
+from sqlalchemy import func, or_
 from sqlalchemy.orm import Session
 
 from backend.constants import APPROVED, IN_PROGRESS, IN_REVIEW, TESTER
@@ -256,23 +256,30 @@ def dashboard_stats(db: Session) -> dict:
         .all()
     )
 
+    totals = (
+        db.query(
+            func.coalesce(func.sum(TestSession.rounding_traps), 0),
+            func.coalesce(func.sum(TestSession.marginal_results), 0),
+        )
+        .filter(TestSession.verdict_overall.isnot(None))
+        .one()
+    )
+
     return {
         "completed": count([APPROVED]),
         "in_progress": count(IN_PROGRESS),
         "under_review": review_count,
         "total": db.query(TestSession).count(),
         "instruments": db.query(Instrument).count(),
-        "failed_tests": (
-            db.query(TestSession)
-            .filter(TestSession.verdict_overall == "FAIL")
-            .count()
-        ),
+        "failed_tests": approved_fail,  # aligned with result_distribution.fail (approved-only)
         "result_distribution": {
             "pass": approved_pass,
             "fail": approved_fail,
             "under_review": review_count,
         },
-        "recent_activity": [
+        "rounding_traps_total": totals[0],
+        "marginal_results_total": totals[1],
+        "recent_activity":[
             {
                 "at": iso(e.at),
                 "user": e.user_name,
