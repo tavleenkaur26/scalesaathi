@@ -71,6 +71,14 @@ def create_user(body: UserCreateIn, db: Session = Depends(get_db), admin: User =
     return {"user_id": u.id, "email": u.email, "full_name": u.full_name, "role": u.role}
 
 
+@router.get("/users")
+def list_users(db: Session = Depends(get_db), admin: User = Depends(require_role(ADMIN))):
+    """Admin-only directory of every account, for the Manage Users screen."""
+    users = db.query(User).order_by(User.full_name).all()
+    return [{"user_id": u.id, "email": u.email, "full_name": u.full_name,
+             "designation": u.designation, "role": u.role, "is_active": u.is_active}
+            for u in users]
+
 @router.get("/auth/me")
 def me(user: User = Depends(get_current_user)):
     return {"user_id": user.id, "email": user.email, "full_name": user.full_name,
