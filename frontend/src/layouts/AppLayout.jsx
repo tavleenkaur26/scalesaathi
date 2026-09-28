@@ -13,6 +13,7 @@ const NAV_ITEMS = [
   { to: "/app/repository", label: "Repository", icon: "repository" },
   { to: "/app/history", label: "History", icon: "history" },
   { to: "/app/rulesets", label: "Rulesets", icon: "rules", roles: ["Admin"] },
+  { to: "/app/users", label: "Manage Users", icon: "users", roles: ["Admin"] },
   { to: "/app/settings", label: "Settings", icon: "settings" },
 ];
 
@@ -25,6 +26,7 @@ const glyphs = {
   repository: <><path d="M3 7h18v14H3zM6 4h12v3M7 11h10m-10 4h10"/></>,
   history: <><path d="M4 8V3m0 5h5"/><path d="M4.8 8a8.5 8.5 0 1 1-1 7M12 7v5l3 2"/></>,
   rules: <><path d="M5 3h14v18H5zM8 7h8m-8 4h8m-8 4h5"/></>,
+    users: <><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 20a6.5 6.5 0 0 0-2.8-5.3"/></>,
   settings: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.6 2.8-.2-.1a1.7 1.7 0 0 0-1.8.1 1.7 1.7 0 0 0-.9 1.5v.2h-3.2v-.2a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.8.1l-.2.1-1.6-2.8.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-.9h-.2v-3.2h.2a1.7 1.7 0 0 0 1.6-1.1 1.7 1.7 0 0 0-.1-1.8l-.1-.2 2.8-1.6.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 .9-1.5v-.2h3.2v.2a1.7 1.7 0 0 0 1.1 1.6 1.7 1.7 0 0 0 1.8-.1l.2-.1 1.6 2.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5.9h.2v3.2h-.2a1.7 1.7 0 0 0-1.6 1.1z"/></>,
 };
 

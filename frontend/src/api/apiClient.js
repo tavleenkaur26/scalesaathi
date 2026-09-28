@@ -110,6 +110,13 @@ export const api = {
       auth: false,
     }),
 
+  // Admin only: create an account with any role
+  createUser: (body) =>
+    request("/users", {
+      method: "POST",
+      body,
+    }),
+
   me: () => request("/auth/me"),
 
   demoUsers: () =>

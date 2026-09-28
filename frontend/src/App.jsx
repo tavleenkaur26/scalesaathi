@@ -20,6 +20,7 @@ import Repository from "./pages/app/Repository";
 import History from "./pages/app/History";
 import Rulesets from "./pages/app/Rulesets";
 import Settings from "./pages/app/Settings";
+import ManageUsers from "./pages/app/ManageUsers";
 import TestPlan from "./pages/app/TestPlan";
 import TestSessionWizard from "./pages/app/TestSessionWizard";
 import TestResults from "./pages/app/TestResults";
@@ -54,6 +55,7 @@ export default function App() {
         <Route path="history" element={<History />} />
         <Route path="rulesets" element={<RequireRole roles={["Admin"]}><Rulesets /></RequireRole>} />
         <Route path="settings" element={<Settings />} />
+                <Route path="users" element={<RequireRole roles={["Admin"]}><ManageUsers /></RequireRole>} />
       </Route>
     </Routes>
   );
