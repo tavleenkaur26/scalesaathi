@@ -37,6 +37,19 @@
   --shadow-button: 0 6px 16px -8px rgba(185, 126, 83, 0.55);
 
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* --- Extended palette: dark "instrument" surfaces + metals --- */
+  --paper: #f7f1e3;
+  --espresso: #1b120b;
+  --espresso-2: #26190f;
+  --espresso-3: #33220f;
+  --gold: #c9a45c;
+  --gold-soft: #e3c98f;
+  --copper: #a8683a;
+  --brown: #765331;
+  --sage: #dfe4c6;
+  --pass: #3f7a4b;
+  --fail: #a8322b;
 }
 
 @media (prefers-color-scheme: dark) {
