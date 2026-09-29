@@ -2,8 +2,7 @@ import { useState } from "react";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 import logo from "../../assets/hero/logo.png";
-import scale from "../../assets/hero/scale.png";
-import botanical from "../../assets/hero/botanical-right.png";
+import AuthArtwork from "../../components/AuthArtwork";
 import "./AuthPages.css";
 
 function AuthBrand() {
@@ -65,9 +64,6 @@ export default function Register() {
         <p className="auth-switch">Already have an account? <Link to="/login">Sign in</Link></p>
       </div>
     </section>
-    <aside className="auth-artwork auth-artwork--register" aria-label="Precision weighing instruments">
-      <div className="auth-artwork__wash" /><img className="auth-artwork__botanical" src={botanical} alt="" /><img className="auth-artwork__scale" src={scale} alt="A precision balance used for instrument verification" />
-      <div className="auth-artwork__caption"><span>Precision builds trust</span><p>Accurate<br />measurements.<br />Safer markets.</p></div>
-    </aside>
+    <AuthArtwork register />
   </main>;
 }

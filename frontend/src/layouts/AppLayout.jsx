@@ -26,12 +26,27 @@ const glyphs = {
   repository: <><path d="M3 7h18v14H3zM6 4h12v3M7 11h10m-10 4h10"/></>,
   history: <><path d="M4 8V3m0 5h5"/><path d="M4.8 8a8.5 8.5 0 1 1-1 7M12 7v5l3 2"/></>,
   rules: <><path d="M5 3h14v18H5zM8 7h8m-8 4h8m-8 4h5"/></>,
-    users: <><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 20a6.5 6.5 0 0 0-2.8-5.3"/></>,
+  users: <><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7M18.5 20a6.5 6.5 0 0 0-2.8-5.3"/></>,
   settings: <><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1-1.6 2.8-.2-.1a1.7 1.7 0 0 0-1.8.1 1.7 1.7 0 0 0-.9 1.5v.2h-3.2v-.2a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.8.1l-.2.1-1.6-2.8.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.5-.9h-.2v-3.2h.2a1.7 1.7 0 0 0 1.6-1.1 1.7 1.7 0 0 0-.1-1.8l-.1-.2 2.8-1.6.1.1a1.7 1.7 0 0 0 1.9.3 1.7 1.7 0 0 0 .9-1.5v-.2h3.2v.2a1.7 1.7 0 0 0 1.1 1.6 1.7 1.7 0 0 0 1.8-.1l.2-.1 1.6 2.8-.1.1a1.7 1.7 0 0 0-.3 1.9 1.7 1.7 0 0 0 1.5.9h.2v3.2h-.2a1.7 1.7 0 0 0-1.6 1.1z"/></>,
 };
 
 function Icon({ name }) {
-  return <svg className="app-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.45" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{glyphs[name]}</svg>;
+  return <svg className="app-nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{glyphs[name]}</svg>;
+}
+
+/* Breadcrumb from the current route: section label from the nav, plus a detail hint. */
+function useCrumbs(pathname) {
+  const parts = pathname.replace(/^\/app\/?/, "").split("/").filter(Boolean);
+  if (!parts.length) return [{ label: "Overview" }];
+  const section = NAV_ITEMS.find((item) => item.to === `/app/${parts[0]}`);
+  const crumbs = [{ label: section?.label || parts[0], to: `/app/${parts[0]}` }];
+  if (parts.length > 1) {
+    const rest = parts.slice(1);
+    const last = rest[rest.length - 1];
+    const isId = /^[0-9a-f-]{6,}$/i.test(last) || /^\d+$/.test(last);
+    crumbs.push({ label: isId ? "Detail" : last.replace(/[-_]/g, " ") });
+  }
+  return crumbs;
 }
 
 export default function AppLayout() {
@@ -40,8 +55,17 @@ export default function AppLayout() {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const allowedItems = NAV_ITEMS.filter((item) => !item.roles || item.roles.includes(user?.role));
+  const crumbs = useCrumbs(location.pathname);
+  const initial = user?.full_name?.trim()?.[0]?.toUpperCase() || "S";
 
   useEffect(() => setMenuOpen(false), [location.pathname]);
+
+  useEffect(() => {
+    if (!menuOpen) return undefined;
+    const onKey = (event) => { if (event.key === "Escape") setMenuOpen(false); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
 
   const logout = () => {
     signOut();
@@ -51,23 +75,31 @@ export default function AppLayout() {
   return <div className="app-layout">
     {menuOpen && <button className="app-sidebar-scrim" type="button" aria-label="Close navigation" onClick={() => setMenuOpen(false)} />}
     <aside className={`app-sidebar ${menuOpen ? "app-sidebar--open" : ""}`} aria-label="Application navigation">
-      <Link className="app-sidebar__brand" to="/app"><img src={logo} alt=""/><span>ScaleSaathi<small>Measure. Verify. Trust.</small></span></Link>
-      <p className="app-sidebar__section-label">WORKSPACE</p>
+      <Link className="app-sidebar__brand" to="/app"><img src={logo} alt=""/><span>Scale<em>Saathi</em><small>Measure. Verify. Trust.</small></span></Link>
+      <p className="app-sidebar__section-label">Workspace</p>
       <nav className="app-sidebar__nav" aria-label="Main navigation">
         <ul>{allowedItems.map((item) => <li key={item.label}>
           <NavLink to={item.to} end={item.end} className={({ isActive }) => `app-sidebar__link ${isActive ? "app-sidebar__link--active" : ""}`}><Icon name={item.icon}/><span>{item.label}</span></NavLink>
         </li>)}</ul>
       </nav>
-      <div className="app-sidebar__footer"><span className="app-sidebar__avatar" aria-hidden="true">{user?.full_name?.trim()?.[0]?.toUpperCase() || "S"}</span><span className="app-sidebar__identity"><strong>{user?.full_name || "ScaleSaathi user"}</strong><small>{user?.role}</small></span><button className="app-sidebar__logout" type="button" onClick={logout}>Log out</button></div>
+      <div className="app-sidebar__footer"><span className="app-sidebar__avatar" aria-hidden="true">{initial}</span><span className="app-sidebar__identity"><strong>{user?.full_name || "ScaleSaathi user"}</strong><small>{user?.role}</small></span><button className="app-sidebar__logout" type="button" onClick={logout}>Log out</button></div>
     </aside>
 
     <div className="app-body">
       <header className="app-topbar">
         <button className="app-menu-toggle" type="button" aria-label="Open navigation" aria-expanded={menuOpen} onClick={() => setMenuOpen((open) => !open)}><span/><span/><span/></button>
-        <Link className="app-topbar__crumb" to="/app">ScaleSaathi</Link>
-        <div className="app-topbar__user"><span className="app-sidebar__avatar" aria-hidden="true">{user?.full_name?.trim()?.[0]?.toUpperCase() || "S"}</span><span><strong>{user?.full_name || "ScaleSaathi user"}</strong><small>{user?.role}</small></span><button type="button" onClick={logout}>Log out</button></div>
+        <nav className="app-topbar__crumbs" aria-label="Breadcrumb">
+          <Link to="/app">ScaleSaathi</Link>
+          {crumbs.map((crumb, index) => <span key={crumb.label} className="app-topbar__crumb-item">
+            <i aria-hidden="true">/</i>
+            {crumb.to && index < crumbs.length - 1
+              ? <Link to={crumb.to}>{crumb.label}</Link>
+              : <span aria-current={index === crumbs.length - 1 ? "page" : undefined}>{crumb.label}</span>}
+          </span>)}
+        </nav>
+        <div className="app-topbar__user"><span className="app-sidebar__avatar" aria-hidden="true">{initial}</span><span><strong>{user?.full_name || "ScaleSaathi user"}</strong><small>{user?.role}</small></span><button type="button" onClick={logout}>Log out</button></div>
       </header>
-      <main className="app-main"><Outlet /></main>
+      <main className="app-main"><div className="app-page" key={location.pathname}><Outlet /></div></main>
     </div>
   </div>;
 }

@@ -3,8 +3,7 @@ import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import { api } from "../../api/apiClient";
 import { useAuth } from "../../auth/AuthContext";
 import logo from "../../assets/hero/logo.png";
-import scale from "../../assets/hero/scale.png";
-import botanical from "../../assets/hero/botanical-right.png";
+import AuthArtwork from "../../components/AuthArtwork";
 import "./AuthPages.css";
 
 const roles = ["Tester", "Reviewer", "Admin"];
@@ -14,15 +13,6 @@ function AuthBrand() {
     <img src={logo} alt="" />
     <span><strong>ScaleSaathi</strong><small>Measure. Verify. Trust.</small></span>
   </Link>;
-}
-
-function AuthArtwork({ register = false }) {
-  return <aside className={`auth-artwork ${register ? "auth-artwork--register" : ""}`} aria-label="Precision weighing instruments">
-    <div className="auth-artwork__wash" />
-    <img className="auth-artwork__botanical" src={botanical} alt="" />
-    <img className="auth-artwork__scale" src={scale} alt="A precision balance used for instrument verification" />
-    <div className="auth-artwork__caption"><span>Precision builds trust</span><p>Accurate<br />measurements.<br />Safer markets.</p></div>
-  </aside>;
 }
 
 function friendlyError(error) {

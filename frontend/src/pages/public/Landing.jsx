@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import botanicalLeft from "../../assets/hero/botanical-left.png";
 import botanicalRight from "../../assets/hero/botanical-right.png";
