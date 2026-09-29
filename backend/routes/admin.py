@@ -23,6 +23,15 @@ def _row(r: RulesetVersion) -> dict:
 def list_rulesets(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
     return [_row(r) for r in db.query(RulesetVersion).order_by(RulesetVersion.id).all()]
 
+@router.get("/rulesets/{version}")
+def get_ruleset_data(version: str, db: Session = Depends(get_db),
+                     user: User = Depends(get_current_user)):
+    """Full stored ruleset JSON for one version, so the UI can show its rule tables."""
+    row = db.query(RulesetVersion).filter_by(version=version).first()
+    if row is None:
+        raise HTTPException(404, "Ruleset version not found")
+    return {**_row(row), "data": row.data}
+
 
 @router.post("/rulesets", status_code=201)
 def create_ruleset(data: dict[str, Any] = Body(...), activate: bool = False, db: Session = Depends(get_db),
